@@ -30,8 +30,8 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
     $modpackYamlFileName = $_.BaseName
     $modpackYamlPath = $_.FullName
 
-    $gameName = $modpackYaml.game
     $modpackYaml = Get-Content -Path $modpackYamlPath | ConvertFrom-Yaml
+    $gameName = $modpackYaml.game
 
     $readmeContent = "# $gameName`n"
     $readmeContent = "`n"
@@ -46,7 +46,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
 
         # Loop through each PowerShell script in the base folder
         Get-ChildItem -Path $BasePath -Filter "*.ps1" | ForEach-Object {
-            $scriptName = $_.BaseName
+            $scriptName = (Get-Culture).TextInfo.ToTitleCase($_.BaseName)
             $scriptPath = $_.FullName
             $scriptContent = Get-Content -Path $scriptPath
 

@@ -1,13 +1,14 @@
-game: "Example"
+---
+game: Example
 modpacks:
-  - author: "First modpack author"
-    name: "First modpack name"
-    version: "1.0.0"
+  - author: FirstModpackAuthor
+    name: FirstModpackName
+    version: 1.0.0
 
-  - author: "Second modpack author"
-    name: "Second modpack name"
-    version: "1.0.0"
+  - author: SecondModpackAuthor
+    name: SecondModpackName
+    version: 1.0.0
 
-  - author: "Third modpack author"
-    name: "Third modpack name"
-    version: "1.0.0"
+  - author: ThirdModpackAuthor
+    name: ThirdModpackName
+    version: 1.0.0
