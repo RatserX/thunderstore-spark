@@ -32,7 +32,9 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
 
     $gameName = $modpackYaml.game
     $modpackYaml = Get-Content -Path $modpackYamlPath | ConvertFrom-Yaml
+
     $readmeContent = "# $gameName`n"
+    $readmeContent = "`n"
 
     $modpackYaml.modpacks | ForEach-Object {
         $modpackAuthor = $_.author
@@ -57,6 +59,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
             $outputPwshFileName = "$gameName-$modpackAuthor-$modpackName-$scriptName.ps1"
             $outputPwshPath = Join-Path -Path $OutputPath -ChildPath $outputPwshFileName
             Set-Content -Path $outputPwshPath -Value $scriptContent
+            Write-Output "$outputPwshFileName has been successfully generated to $OutputPath."
 
             $releaseUrl = "$ReleaseUrl/$outputPwshFileName"
             $readmeContent += "#### $scriptName`n"
@@ -68,6 +71,8 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
     }
 
     # Save the doc file
-    $readmeMarkdownPath = Join-Path -Path $DocsPath -ChildPath "$modpackYamlFileName.md"
+    $readmeMarkdownFileName = "$modpackYamlFileName.md"
+    $readmeMarkdownPath = Join-Path -Path $DocsPath -ChildPath $readmeMarkdownFileName
     Set-Content -Path $readmeMarkdownPath -Value $markdownContent
+    Write-Output "$readmeMarkdownFileName has been successfully generated to $DocsPath."
 }

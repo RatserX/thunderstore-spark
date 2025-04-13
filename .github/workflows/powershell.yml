@@ -42,12 +42,20 @@ jobs:
       - name: Setup
         id: setup
         run: |
-          root_path=$(pwd)
+          ROOT_PATH=$(pwd)
+          echo "base-path=$ROOT_PATH/${{ env.BASE_DIR }}" >> $GITHUB_OUTPUT
+          echo "docs-path=$ROOT_PATH/${{ env.DOCS_DIR }}" >> $GITHUB_OUTPUT
+          echo "modpacks-path=$ROOT_PATH/${{ env.MODPACKS_DIR }}" >> $GITHUB_OUTPUT
+          echo "output-path=$ROOT_PATH/${{ env.OUTPUT_DIR }}" >> $GITHUB_OUTPUT
           echo "commit-messages=$(git log $(git describe --tags --always)..HEAD --pretty=format:'%s')" >> $GITHUB_OUTPUT
-          echo "base-path=$root_path/${{ env.BASE_DIR }}" >> $GITHUB_OUTPUT
-          echo "docs-path=$root_path/${{ env.DOCS_DIR }}" >> $GITHUB_OUTPUT
-          echo "modpacks-path=$root_path/${{ env.MODPACKS_DIR }}" >> $GITHUB_OUTPUT
-          echo "output-path=$root_path/${{ env.OUTPUT_DIR }}" >> $GITHUB_OUTPUT
+
+      - name: Output
+        run: |
+          echo "base-path: ${{ steps.setup.outputs.base-path }}"
+          echo "docs-path: ${{ steps.setup.outputs.docs-path }}"
+          echo "modpacks-path: ${{ steps.setup.outputs.modpacks-path }}"
+          echo "output-path: ${{ steps.setup.outputs.output-path }}"
+          echo "commit-messages: ${{ steps.setup.outputs.commit-messages }}"
 
       - name: Run build
         shell: pwsh
