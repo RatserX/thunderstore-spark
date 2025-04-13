@@ -33,15 +33,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PowerShell
-        shell: pwsh
-        run: |
-          Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module powershell-yaml
-
       - name: Setup
         id: setup
         run: |
+          # Setup
           ROOT_PATH=$(pwd)
           echo "base-path=$ROOT_PATH/${{ env.BASE_DIR }}" >> $GITHUB_OUTPUT
           echo "docs-path=$ROOT_PATH/${{ env.DOCS_DIR }}" >> $GITHUB_OUTPUT
@@ -52,23 +47,34 @@ jobs:
 
       - name: Output
         run: |
+          # Output
           echo "base-path: ${{ steps.setup.outputs.base-path }}"
           echo "docs-path: ${{ steps.setup.outputs.docs-path }}"
           echo "modpacks-path: ${{ steps.setup.outputs.modpacks-path }}"
           echo "output-path: ${{ steps.setup.outputs.output-path }}"
+          echo "tag-name: ${{ steps.setup.outputs.tag-name }}"
           echo "commit-messages: ${{ steps.setup.outputs.commit-messages }}"
 
-      - name: Run build
+      - name: Setup PowerShell
         shell: pwsh
         run: |
-          pwsh build.ps1 `
+          # Setup PowerShell
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module powershell-yaml
+
+      - name: Generate output
+        shell: pwsh
+        run: |
+          # Generate output
+          ROOT_PATH=$(pwd)
+          pwsh $ROOT_PATH/build.ps1 `
             -BasePath ${{ steps.setup.outputs.base-path }} `
             -DocsPath ${{ steps.setup.outputs.docs-path }} `
             -ModpacksPath ${{ steps.setup.outputs.modpacks-path }} `
             -OutputPath ${{ steps.setup.outputs.output-path }} `
             -ReleaseUrl ${{ env.RELEASE_URL }}
 
-      - name: Create Release with Generated Scripts
+      - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
@@ -76,6 +82,7 @@ jobs:
           files: ${{ env.OUTPUT_DIR }}/*.ps1
           name: ${{ github.run_id }},
           tag_name: ${{ steps.setup.outputs.tag-name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Documentation to Main
         run: |
