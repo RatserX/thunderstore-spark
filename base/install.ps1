@@ -7,7 +7,7 @@ $modpackName = "VolcanoSauce"
 $modpackVersion = "1.0.0"
 
 # Ask the user for the modpack folder path
-$defaultModpackFolderPath = "${Env:USERPROFILE}\Downloads\REPOtest" #"${Env:ProgramFiles(x86)}\Steam\steamapps\common\REPO"
+$defaultModpackFolderPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\REPO"
 $modpackFolderPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackFolderPath)"
 if ([string]::IsNullOrWhiteSpace($modpackFolderPath)) {
     $modpackFolderPath = $defaultModpackFolderPath

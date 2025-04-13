@@ -11,9 +11,9 @@ $itemsToDelete = @(
     "CHANGELOG.md",
     "icon.png",
     "manifest.json",
-    "README.md",
-    "doorstop_config.ini",
-    "winhttp.dll"
+    "README.md"
+    # "doorstop_config.ini",
+    # "winhttp.dll"
 )
 
 # Ask the user for the modpack folder path
