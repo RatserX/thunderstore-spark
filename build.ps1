@@ -10,6 +10,9 @@ param (
 # Change the ErrorActionPreference to 'Stop'
 $ErrorActionPreference = 'Stop'
 
+# Import modules
+Import-Module powershell-yaml
+
 # Ensure the docs folder path exists
 if (Test-Path -Path $DocsPath) {
     Get-ChildItem -Path $DocsPath -Exclude ".gitkeep" | Remove-Item -Recurse -Force

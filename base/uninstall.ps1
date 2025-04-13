@@ -1,6 +1,3 @@
-# Change the ErrorActionPreference to 'Stop'
-$ErrorActionPreference = 'Stop'
-
 # Define global variables
 $modpackAuthor = "MODPACK_AUTHOR"
 $modpackName = "MODPACK_NAME"
@@ -15,6 +12,9 @@ $itemsToDelete = @(
     # "doorstop_config.ini",
     # "winhttp.dll"
 )
+
+# Change the ErrorActionPreference to 'Stop'
+$ErrorActionPreference = 'Stop'
 
 # Ask the user for the modpack folder path
 $defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common"
