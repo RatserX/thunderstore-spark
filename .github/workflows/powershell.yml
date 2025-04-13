@@ -33,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install from PSGallery
+      - name: Setup PowerShell
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
@@ -47,7 +47,8 @@ jobs:
           echo "docs-path=$ROOT_PATH/${{ env.DOCS_DIR }}" >> $GITHUB_OUTPUT
           echo "modpacks-path=$ROOT_PATH/${{ env.MODPACKS_DIR }}" >> $GITHUB_OUTPUT
           echo "output-path=$ROOT_PATH/${{ env.OUTPUT_DIR }}" >> $GITHUB_OUTPUT
-          echo "commit-messages=$(git log $(git describe --tags --always)..HEAD --pretty=format:'%s')" >> $GITHUB_OUTPUT
+          echo "tag-name=$(date +%s)" >> $GITHUB_OUTPUT
+          echo "commit-messages=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
 
       - name: Output
         run: |
@@ -73,7 +74,8 @@ jobs:
         with:
           body: ${{ steps.setup.outputs.commit-messages }}
           files: ${{ env.OUTPUT_DIR }}/*.ps1
-          name: ${{ github.run_id }}
+          name: ${{ github.run_id }},
+          tag_name: ${{ steps.setup.outputs.tag-name }}
 
       - name: Push Documentation to Main
         run: |
