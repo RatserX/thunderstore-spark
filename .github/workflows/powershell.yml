@@ -14,6 +14,13 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  BASE_DIR: base
+  DOCS_DIR: docs
+  MODPACKS_DIR: modpacks
+  OUTPUT_DIR: output
+  RELEASE_URL: https://github.com/${{ github.repository }}/releases/download/latest
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -23,15 +30,36 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Setup
+        id: setup
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          echo "commit-messages=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'%s')" >> $GITHUB_OUTPUT
+
+      - name: Run build
+        shell: pwsh
+        run: |
+          pwsh build.ps1 `
+            -BasePath ${{ env.BASE_DIR }} `
+            -DocsPath ${{ env.DOCS_DIR }} `
+            -ModpacksPath ${{ env.MODPACKS_DIR }} `
+            -OutputPath ${{ env.OUTPUT_DIR }} `
+            -ReleaseUrl ${{ env.RELEASE_URL }}
+
+      - name: Create Release with Generated Scripts
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.setup.outputs.commit-messages }}
+          files: ${{ env.OUTPUT_DIR }}/*.ps1
+          name: ${{ github.run_id }}
+
+      - name: Push Documentation to Main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./docs
+          git commit -m "Update docs"
+          git push origin main

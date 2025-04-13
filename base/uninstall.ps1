@@ -2,9 +2,9 @@
 $ErrorActionPreference = 'Stop'
 
 # Define global variables
-$modpackAuthor = "Pixelomega"
-$modpackName = "VolcanoSauce"
-$modpackVersion = "1.0.0"
+$modpackAuthor = "MODPACK_AUTHOR"
+$modpackName = "MODPACK_NAME"
+$modpackVersion = "MODPACK_VERSION"
 
 $itemsToDelete = @(
     "BepInEx",
@@ -17,17 +17,24 @@ $itemsToDelete = @(
 )
 
 # Ask the user for the modpack folder path
-$defaultModpackFolderPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\REPO"
-$modpackFolderPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackFolderPath)"
-if ([string]::IsNullOrWhiteSpace($modpackFolderPath)) {
-    $modpackFolderPath = $defaultModpackFolderPath
+$defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common"
+$modpackPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackPath)"
+if ([string]::IsNullOrWhiteSpace($modpackPath)) {
+    $modpackPath = $defaultModpackPath
+}
+
+# Ask the user to confirm the modpack folder path
+$modpackPathConfirmation = Read-Host "Modpack folder path: $modpackPath. Is this correct? (y/n)"
+if ($modpackPathConfirmation -notmatch '^(y|Y)$') {
+    Write-Output "Exiting..."
+    exit
 }
 
 # Read the manifest.json file
-$manifestFilePath = Join-Path -Path $modpackFolderPath -ChildPath "manifest.json"
-$manifest = Get-Content -Path $manifestFilePath | ConvertFrom-Json
-$name = $manifest.name
-$versionNumber = $manifest.version_number
+$manifestJsonPath = Join-Path -Path $modpackPath -ChildPath "manifest.json"
+$manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
+$name = $manifestJson.name
+$versionNumber = $manifestJson.version_number
 
 if ($name -ne $modpackName -or $versionNumber -ne $modpackVersion) {
     Write-Output "Manifest validation failed. Expected: $modpackName-$modpackVersion. Found name: $name-$versionNumber."
@@ -36,7 +43,7 @@ if ($name -ne $modpackName -or $versionNumber -ne $modpackVersion) {
 
 # Delete the modpack
 foreach ($itemToDelete in $itemsToDelete) {
-    $itemPath = Join-Path -Path $modpackFolderPath -ChildPath $itemToDelete
+    $itemPath = Join-Path -Path $modpackPath -ChildPath $itemToDelete
 
     try {
         Remove-Item -Recurse -Force -Path $itemPath
@@ -48,4 +55,4 @@ foreach ($itemToDelete in $itemsToDelete) {
     }
 }
 
-Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully uninstalled from $modpackFolderPath."
+Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully uninstalled from $modpackPath."

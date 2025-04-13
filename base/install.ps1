@@ -2,142 +2,149 @@
 $ErrorActionPreference = 'Stop'
 
 # Define global variables
-$modpackAuthor = "Pixelomega"
-$modpackName = "VolcanoSauce"
-$modpackVersion = "1.0.0"
+$modpackAuthor = "MODPACK_AUTHOR"
+$modpackName = "MODPACK_NAME"
+$modpackVersion = "MODPACK_VERSION"
 
 # Ask the user for the modpack folder path
-$defaultModpackFolderPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\REPO"
-$modpackFolderPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackFolderPath)"
-if ([string]::IsNullOrWhiteSpace($modpackFolderPath)) {
-    $modpackFolderPath = $defaultModpackFolderPath
+$defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common"
+$modpackPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackPath)"
+if ([string]::IsNullOrWhiteSpace($modpackPath)) {
+    $modpackPath = $defaultModpackPath
+}
+
+# Ask the user to confirm the modpack folder path
+$modpackPathConfirmation = Read-Host "Modpack folder path: $modpackPath. Is this correct? (y/n)"
+if ($modpackPathConfirmation -notmatch '^(y|Y)$') {
+    Write-Output "Exiting..."
+    exit
 }
 
 # Delete the "BepInEx" folder inside the modpack folder path
-$modpackBepInExFolderPath = Join-Path -Path $modpackFolderPath -ChildPath "BepInEx"
-if (Test-Path -Path $modpackBepInExFolderPath) {
-    Remove-Item -Recurse -Force -Path $modpackBepInExFolderPath
+$modpackBepInExPath = Join-Path -Path $modpackPath -ChildPath "BepInEx"
+if (Test-Path -Path $modpackBepInExPath) {
+    Remove-Item -Recurse -Force -Path $modpackBepInExPath
 }
 
 # Ensure the modpack folder path exists
-if (!(Test-Path -Path $modpackFolderPath)) {
-    New-Item -ItemType Directory -Path $modpackFolderPath | Out-Null
+if (!(Test-Path -Path $modpackPath)) {
+    New-Item -ItemType Directory -Path $modpackPath | Out-Null
 }
 
 # Download the modpack
 $modpackUri = "https://thunderstore.io/package/download/$modpackAuthor/$modpackName/$modpackVersion/"
-$modpackZipFilePath = "$modpackFolderPath\$modpackAuthor-$modpackName.zip"
-Invoke-WebRequest -Uri $modpackUri -OutFile $modpackZipFilePath
+$modpackZipPath = "$modpackPath\$modpackAuthor-$modpackName.zip"
+Invoke-WebRequest -Uri $modpackUri -OutFile $modpackZipPath
 
 # Extract the modpack
-Expand-Archive -Path $modpackZipFilePath -DestinationPath $modpackFolderPath -Force
-Remove-Item -Force -Path $modpackZipFilePath
+Expand-Archive -Path $modpackZipPath -DestinationPath $modpackPath -Force
+Remove-Item -Force -Path $modpackZipPath
 
 # Read the manifest.json file
-$manifestFilePath = Join-Path -Path $modpackFolderPath -ChildPath "manifest.json"
-$manifest = Get-Content -Path $manifestFilePath | ConvertFrom-Json
-$dependencies = $manifest.dependencies
+$manifestJsonPath = Join-Path -Path $modpackPath -ChildPath "manifest.json"
+$manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
+$dependencies = $manifestJson.dependencies
 
 # Process each dependency
 foreach ($dependency in $dependencies) {
-    $dependencyFields = $dependency -split "-"
-    $modAuthor = $dependencyFields[0]
-    $modName = $dependencyFields[1]
-    $modVersion = $dependencyFields[2]
+    $modFields = $dependency -split "-"
+    $modAuthor = $modFields[0]
+    $modName = $modFields[1]
+    $modVersion = $modFields[2]
 
     $modInfo = "$modAuthor-$modName"
     $isBepInEx = $modInfo -eq "BepInEx-BepInExPack"
 
     # Define the mod extract folder path
-    $pluginExtractFolderPath = "$modpackFolderPath\BepInEx\plugins\$modInfo"
+    $pluginExtractPath = "$modpackPath\BepInEx\plugins\$modInfo"
     Write-Output "Downloading mod: $modInfo-$modVersion."
 
     # Ensure the mod extract folder path exists
-    if (!(Test-Path -Path $pluginExtractFolderPath)) {
-        New-Item -ItemType Directory -Path $pluginExtractFolderPath | Out-Null
+    if (!(Test-Path -Path $pluginExtractPath)) {
+        New-Item -ItemType Directory -Path $pluginExtractPath | Out-Null
     }
 
     # Download the mod
     $modUri = "https://thunderstore.io/package/download/$modAuthor/$modName/$modVersion/"
-    $pluginZipFilePath = "$pluginExtractFolderPath\$modInfo.zip"
-    Invoke-WebRequest -Uri $modUri -OutFile $pluginZipFilePath
+    $pluginZipPath = "$pluginExtractPath\$modInfo.zip"
+    Invoke-WebRequest -Uri $modUri -OutFile $pluginZipPath
 
     # Extract the mod
-    Expand-Archive -Path $pluginZipFilePath -DestinationPath $pluginExtractFolderPath -Force
-    Remove-Item -Force -Path $pluginZipFilePath
+    Expand-Archive -Path $pluginZipPath -DestinationPath $pluginExtractPath -Force
+    Remove-Item -Force -Path $pluginZipPath
 
     # Check for "BepInExPack" folder inside the extracted folder
-    $pluginBepInExPackFolderPath = Join-Path -Path $pluginExtractFolderPath -ChildPath "BepInExPack"
-    if (Test-Path -Path $pluginBepInExPackFolderPath) {
-        Get-ChildItem -Path $pluginBepInExPackFolderPath -File -Depth 1 | Move-Item -Destination $modpackFolderPath -Force
-        Get-ChildItem -Path $pluginBepInExPackFolderPath -Recurse | Move-Item -Destination $pluginExtractFolderPath -Force
-        Remove-Item -Recurse -Force -Path $pluginBepInExPackFolderPath
+    $pluginBepInExPackPath = Join-Path -Path $pluginExtractPath -ChildPath "BepInExPack"
+    if (Test-Path -Path $pluginBepInExPackPath) {
+        Get-ChildItem -Path $pluginBepInExPackPath -File -Depth 1 | Move-Item -Destination $modpackPath -Force
+        Get-ChildItem -Path $pluginBepInExPackPath -Recurse | Move-Item -Destination $pluginExtractPath -Force
+        Remove-Item -Recurse -Force -Path $pluginBepInExPackPath
     }
 
     # Check for "BepInEx" folder inside the extracted folder
-    $pluginBepInExFolderPath = Join-Path -Path $pluginExtractFolderPath -ChildPath "BepInEx"
-    if (Test-Path -Path $pluginBepInExFolderPath) {
-        Get-ChildItem -Path $pluginBepInExFolderPath -Recurse | Move-Item -Destination $pluginExtractFolderPath -Force
-        Remove-Item -Recurse -Force -Path $pluginBepInExFolderPath
+    $pluginBepInExPath = Join-Path -Path $pluginExtractPath -ChildPath "BepInEx"
+    if (Test-Path -Path $pluginBepInExPath) {
+        Get-ChildItem -Path $pluginBepInExPath -Recurse | Move-Item -Destination $pluginExtractPath -Force
+        Remove-Item -Recurse -Force -Path $pluginBepInExPath
     }
 
     # Check for other folders and move their contents
-    Get-ChildItem -Path $pluginExtractFolderPath -Directory | ForEach-Object {
-        $bepInExFolder = $_.Name
-        $bepInExFolderPath = $_.FullName
+    Get-ChildItem -Path $pluginExtractPath -Directory | ForEach-Object {
+        $bepInExDirectory = $_.Name
+        $bepInExPath = $_.FullName
 
         # Skip folders named the same as the mod
-        if ($bepInExFolder -eq $modName) {
+        if ($bepInExDirectory -eq $modName) {
             return
         }
 
         # Define the list of special folders
-        $specialFolders = @("patchers", "plugins")
-        $isSpecialFolder = $specialFolders -contains $bepInExFolder
+        $specialDirectories = @("patchers", "plugins")
+        $isSpecialDirectory = $specialDirectories -contains $bepInExDirectory
 
         # Define the mod folder path
-        $modFolderPath = "$modpackFolderPath\BepInEx\$bepInExFolder"
-        if ($isSpecialFolder) {
-            $modFolderPath = "$modFolderPath\$modInfo"
+        $modPath = "$modpackPath\BepInEx\$bepInExDirectory"
+        if ($isSpecialDirectory) {
+            $modPath = "$modPath\$modInfo"
         }
 
-        Write-Output "Installing mod: $modFolderPath."
+        Write-Output "Installing mod: $modPath."
 
         # Ensure the mod folder path exists
-        if (!(Test-Path -Path $modFolderPath)) {
-            New-Item -ItemType Directory -Path $modFolderPath | Out-Null
+        if (!(Test-Path -Path $modPath)) {
+            New-Item -ItemType Directory -Path $modPath | Out-Null
         }
 
-        Get-ChildItem -Path $bepInExFolderPath -Depth 1 | ForEach-Object {
+        Get-ChildItem -Path $bepInExPath -Depth 1 | ForEach-Object {
             $isContainer = $_.PSIsContainer
             $item = $_.Name
             $itemPath = $_.FullName
 
             try {
-                if ($isSpecialFolder) {
-                    Copy-Item -Path $itemPath -Destination $modFolderPath -Recurse -Force
+                if ($isSpecialDirectory) {
+                    Copy-Item -Path $itemPath -Destination $modPath -Recurse -Force
                     Remove-Item -Recurse -Force -Path $itemPath
                 } elseif ($isContainer) {
-                    Move-Item -Path $itemPath -Destination $modFolderPath -Force
+                    Move-Item -Path $itemPath -Destination $modPath -Force
                 } else {
-                    Move-Item -Path $itemPath -Destination $modFolderPath
+                    Move-Item -Path $itemPath -Destination $modPath
                 }
             } catch [System.IO.IOException] {
-                Write-Output "Unable to move $item to $modFolderPath."
+                Write-Output "Unable to move $item to $modPath."
             } catch {
                 Write-Output "An error occurred that could not be resolved."
                 Write-Output $_
             }
         }
 
-        Remove-Item -Recurse -Force -Path $bepInExFolderPath
+        Remove-Item -Recurse -Force -Path $bepInExPath
     }
 
     # Delete empty folders
-    $pluginItemsCount = Get-ChildItem -Path $pluginExtractFolderPath -Recurse | Measure-Object -Property Length -Sum
+    $pluginItemsCount = Get-ChildItem -Path $pluginExtractPath -Recurse | Measure-Object -Property Length -Sum
     if ($isBepInEx -or $pluginItemsCount -eq 0) {
-        Remove-Item -Recurse -Force -Path $pluginExtractFolderPath
+        Remove-Item -Recurse -Force -Path $pluginExtractPath
     }
 }
 
-Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully installed to $modpackFolderPath."
+Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully installed to $modpackPath."
