@@ -1,6 +1,3 @@
-# Change the ErrorActionPreference to 'Stop'
-$ErrorActionPreference = 'Stop'
-
 # Define parameters
 param (
     [string]$BasePath,
@@ -9,6 +6,9 @@ param (
     [string]$OutputPath,
     [string]$ReleaseUrl
 )
+
+# Change the ErrorActionPreference to 'Stop'
+$ErrorActionPreference = 'Stop'
 
 # Ensure the docs folder path exists
 if (Test-Path -Path $DocsPath) {

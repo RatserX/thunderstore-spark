@@ -36,16 +36,21 @@ jobs:
       - name: Setup
         id: setup
         run: |
-          echo "commit-messages=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:'%s')" >> $GITHUB_OUTPUT
+          root_path=$(pwd)
+          echo "commit-messages=$(git log $(git describe --tags --always)..HEAD --pretty=format:'%s')" >> $GITHUB_OUTPUT
+          echo "base-path=$root_path/${{ env.BASE_DIR }}" >> $GITHUB_OUTPUT
+          echo "docs-path=$root_path/${{ env.DOCS_DIR }}" >> $GITHUB_OUTPUT
+          echo "modpacks-path=$root_path/${{ env.MODPACKS_DIR }}" >> $GITHUB_OUTPUT
+          echo "output-path=$root_path/${{ env.OUTPUT_DIR }}" >> $GITHUB_OUTPUT
 
       - name: Run build
         shell: pwsh
         run: |
           pwsh build.ps1 `
-            -BasePath ${{ env.BASE_DIR }} `
-            -DocsPath ${{ env.DOCS_DIR }} `
-            -ModpacksPath ${{ env.MODPACKS_DIR }} `
-            -OutputPath ${{ env.OUTPUT_DIR }} `
+            -BasePath ${{ steps.setup.outputs.base-path }} `
+            -DocsPath ${{ steps.setup.outputs.docs-path }} `
+            -ModpacksPath ${{ steps.setup.outputs.modpacks-path }} `
+            -OutputPath ${{ steps.setup.outputs.output-path }} `
             -ReleaseUrl ${{ env.RELEASE_URL }}
 
       - name: Create Release with Generated Scripts
