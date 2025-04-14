@@ -9,13 +9,13 @@ https://example/
 #### Install
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/Example-FirstModpackAuthor-FirstModpackName-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438568762/Example-FirstModpackAuthor-FirstModpackName-Install.ps1' | iex
 ```` 
 
 #### Uninstall
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/Example-FirstModpackAuthor-FirstModpackName-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438568762/Example-FirstModpackAuthor-FirstModpackName-Uninstall.ps1' | iex
 ```` 
 
 ---
@@ -25,13 +25,13 @@ https://example/
 #### Install
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/Example-SecondModpackAuthor-SecondModpackName-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438568762/Example-SecondModpackAuthor-SecondModpackName-Install.ps1' | iex
 ```` 
 
 #### Uninstall
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/Example-SecondModpackAuthor-SecondModpackName-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438568762/Example-SecondModpackAuthor-SecondModpackName-Uninstall.ps1' | iex
 ```` 
 
 ---
@@ -41,13 +41,13 @@ https://example/
 #### Install
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/Example-ThirdModpackAuthor-ThirdModpackName-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438568762/Example-ThirdModpackAuthor-ThirdModpackName-Install.ps1' | iex
 ```` 
 
 #### Uninstall
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/Example-ThirdModpackAuthor-ThirdModpackName-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438568762/Example-ThirdModpackAuthor-ThirdModpackName-Uninstall.ps1' | iex
 ```` 
 
 ---
