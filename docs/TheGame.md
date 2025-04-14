@@ -1,6 +1,7 @@
-##### The Game is a sandbox game that allows players to create and explore their own worlds.
+# The Game
+The Game is a sandbox game that allows players to create and explore their own worlds.
 ### FirstModpackAuthor-FirstModpackName-1.0.0
-##### https://example/
+https://example/
 #### Install
 ````ps1
 irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/latest/TheGame-FirstModpackAuthor-FirstModpackName-Install.ps1' | iex
@@ -11,7 +12,7 @@ irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/la
 ```` 
 ---
 ### SecondModpackAuthor-SecondModpackName-1.0.0
-##### https://example/
+https://example/
 #### Install
 ````ps1
 irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/latest/TheGame-SecondModpackAuthor-SecondModpackName-Install.ps1' | iex
@@ -22,7 +23,7 @@ irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/la
 ```` 
 ---
 ### ThirdModpackAuthor-ThirdModpackName-1.0.0
-##### https://example/
+https://example/
 #### Install
 ````ps1
 irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/latest/TheGame-ThirdModpackAuthor-ThirdModpackName-Install.ps1' | iex
