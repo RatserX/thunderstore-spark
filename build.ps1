@@ -61,13 +61,14 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
             Set-Content -Path $outputPwshPath -Value $scriptContent
             Write-Output "$outputPwshFileName has been successfully generated to $OutputPath."
 
-            $releaseUrl = "$ReleaseUrl/$outputPwshFileName"
+            $scriptUri = "$ReleaseUrl/$outputPwshFileName"
             $readmeContent += "#### $scriptName`n"
-            $readmeContent += "```ps1`n"
-            $readmeContent += "irm '$releaseUrl' | iex`n"
-            $readmeContent += "``` `n"
-            $readmeContent += "---`n"
+            $readmeContent += "`````````ps1`n"
+            $readmeContent += "irm '$scriptUri' | iex`n"
+            $readmeContent += "````````` `n"
         }
+
+        $readmeContent += "---`n"
     }
 
     # Save the doc file
