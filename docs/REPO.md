@@ -9,13 +9,13 @@ https://thunderstore.io/c/repo/p/Pixelomega/MildBobbySauce/
 #### Install
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14435830115/REPO-Pixelomega-MildBobbySauce-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/REPO-Pixelomega-MildBobbySauce-Install.ps1' | iex
 ```` 
 
 #### Uninstall
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14435830115/REPO-Pixelomega-MildBobbySauce-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/REPO-Pixelomega-MildBobbySauce-Uninstall.ps1' | iex
 ```` 
 
 ---
@@ -25,13 +25,13 @@ https://thunderstore.io/c/repo/p/Pixelomega/TangySpongeSauce/
 #### Install
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14435830115/REPO-Pixelomega-TangySpongeSauce-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/REPO-Pixelomega-TangySpongeSauce-Install.ps1' | iex
 ```` 
 
 #### Uninstall
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14435830115/REPO-Pixelomega-TangySpongeSauce-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/REPO-Pixelomega-TangySpongeSauce-Uninstall.ps1' | iex
 ```` 
 
 ---
@@ -41,13 +41,13 @@ https://thunderstore.io/c/repo/p/Pixelomega/VolcanoSauce/
 #### Install
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14435830115/REPO-Pixelomega-VolcanoSauce-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/REPO-Pixelomega-VolcanoSauce-Install.ps1' | iex
 ```` 
 
 #### Uninstall
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14435830115/REPO-Pixelomega-VolcanoSauce-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/14438482598/REPO-Pixelomega-VolcanoSauce-Uninstall.ps1' | iex
 ```` 
 
 ---
