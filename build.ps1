@@ -56,7 +56,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
             $scriptContent = $scriptContent -replace "MODPACK_VERSION", $modpackVersion
 
             # Save the output file
-            $outputPwshFileName = "$gameName-$modpackAuthor-$modpackName-$scriptName.ps1"
+            $outputPwshFileName = "$modpackYamlFileName-$modpackAuthor-$modpackName-$scriptName.ps1"
             $outputPwshPath = Join-Path -Path $OutputPath -ChildPath $outputPwshFileName
             Set-Content -Path $outputPwshPath -Value $scriptContent
             Write-Output "$outputPwshFileName has been successfully generated to $OutputPath."
@@ -73,6 +73,6 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
     # Save the doc file
     $readmeMarkdownFileName = "$modpackYamlFileName.md"
     $readmeMarkdownPath = Join-Path -Path $DocsPath -ChildPath $readmeMarkdownFileName
-    Set-Content -Path $readmeMarkdownPath -Value $markdownContent
+    Set-Content -Path $readmeMarkdownPath -Value $readmeContent
     Write-Output "$readmeMarkdownFileName has been successfully generated to $DocsPath."
 }

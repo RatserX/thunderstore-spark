@@ -45,7 +45,7 @@ jobs:
           echo "docs-path=$ROOT_PATH/${{ env.DOCS_DIR }}" >> $GITHUB_OUTPUT
           echo "modpacks-path=$ROOT_PATH/${{ env.MODPACKS_DIR }}" >> $GITHUB_OUTPUT
           echo "output-path=$ROOT_PATH/${{ env.OUTPUT_DIR }}" >> $GITHUB_OUTPUT
-          echo "tag-name=$(date +%s)" >> $GITHUB_OUTPUT
+          echo "tag-name=r$(date +%s)" >> $GITHUB_OUTPUT
           echo "commit-messages=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
 
       - name: Output
@@ -77,17 +77,16 @@ jobs:
             -OutputPath ${{ steps.setup.outputs.output-path }} `
             -ReleaseUrl ${{ env.RELEASE_URL }}
 
-      - name: Create Release
-        id: create_release
+      - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           body: ${{ steps.setup.outputs.commit-messages }}
           files: ${{ env.OUTPUT_DIR }}/*.ps1
-          name: ${{ github.run_id }},
+          name: Build r${{ github.run_id }}
           tag_name: ${{ steps.setup.outputs.tag-name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Documentation to Main
+      - name: Update docs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
