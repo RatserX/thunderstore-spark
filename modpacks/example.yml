@@ -1,8 +1,8 @@
 ---
 game:
-  description: The Game is a sandbox game that allows players to create and explore their own worlds.
-  directory: TheGame
-  name: The Game
+  description: The Example is a sandbox game that allows players to create and explore their own worlds.
+  directory: Example
+  name: The Example
 modpacks:
   - author: FirstModpackAuthor
     name: FirstModpackName
