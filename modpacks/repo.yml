@@ -1,6 +1,10 @@
 ---
-game: REPO
+game:
+  description: R.E.P.O. is an online co-op horror game featuring physics, proximity voice chat and scary monsters.
+  directory: REPO
+  name: R.E.P.O.
 modpacks:
   - author: Pixelomega
     name: VolcanoSauce
+    uri: https://thunderstore.io/c/repo/p/Pixelomega/VolcanoSauce/
     version: 1.0.0
