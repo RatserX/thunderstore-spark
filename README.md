@@ -11,7 +11,7 @@ It is important to note that this project is not intended to replace tools like 
 
 ## Usage
 
-Below is a list of supported games, each with a link to their corresponding modpack setup guides:
+This project offers a collection of PowerShell scripts designed to streamline the setup of Thunderstore modpacks. Below is a list of supported games, each linking to its respective modpack setup guide:
 
 | Game           | Modpacks                                 |
 |----------------|------------------------------------------|

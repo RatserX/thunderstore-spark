@@ -72,7 +72,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
             Write-Output "$outputPwshFile has been successfully generated to $OutputPath."
 
             $scriptUri = "$ReleaseUri/$outputPwshFile"
-            $readmeContent += "#### $scriptName`n"
+            $readmeContent += "#### $scriptName Command`n"
             $readmeContent += "`n"
             $readmeContent += "`````````ps1`n"
             $readmeContent += "irm '$scriptUri' | iex`n"
