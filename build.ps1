@@ -4,7 +4,8 @@ param (
     [string]$DocsPath,
     [string]$ModpacksPath,
     [string]$OutputPath,
-    [string]$ReleaseUri
+    [string]$ReleaseUri,
+    [string]$TagName
 )
 
 # Change the ErrorActionPreference to 'Stop'
@@ -38,7 +39,11 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
 
     # Define the readme content
     $readmeContent = "# $gameName`n"
+    $readmeContent = "`n"
     $readmeContent += "$gameDescription`n"
+    $readmeContent = "`n"
+    $readmeContent += "## Modpacks`n"
+    $readmeContent = "`n"
 
     $modpackYaml.modpacks | ForEach-Object {
         $modpackAuthor = $_.author
@@ -69,12 +74,15 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
 
             $scriptUri = "$ReleaseUri/$outputPwshFile"
             $readmeContent += "#### $scriptName`n"
+            $readmeContent = "`n"
             $readmeContent += "`````````ps1`n"
             $readmeContent += "irm '$scriptUri' | iex`n"
             $readmeContent += "````````` `n"
+            $readmeContent = "`n"
         }
 
         $readmeContent += "---`n"
+        $readmeContent = "`n"
     }
 
     # Save the doc file

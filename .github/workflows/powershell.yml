@@ -19,7 +19,7 @@ env:
   DOCS_DIR: docs
   MODPACKS_DIR: modpacks
   OUTPUT_DIR: output
-  RELEASE_URI: https://github.com/${{ github.repository }}/releases/download/latest
+  RELEASE_URI: https://github.com/${{ github.repository }}/releases/download/${{ github.run_id }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -45,7 +45,7 @@ jobs:
           echo "docs-path=$ROOT_PATH/${{ env.DOCS_DIR }}" >> $GITHUB_OUTPUT
           echo "modpacks-path=$ROOT_PATH/${{ env.MODPACKS_DIR }}" >> $GITHUB_OUTPUT
           echo "output-path=$ROOT_PATH/${{ env.OUTPUT_DIR }}" >> $GITHUB_OUTPUT
-          echo "tag-name=r$(date +%s)" >> $GITHUB_OUTPUT
+          echo "tag-name=r${{ github.run_id }}" >> $GITHUB_OUTPUT
           echo "commit-messages=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
 
       - name: Output
@@ -75,14 +75,15 @@ jobs:
             -DocsPath ${{ steps.setup.outputs.docs-path }} `
             -ModpacksPath ${{ steps.setup.outputs.modpacks-path }} `
             -OutputPath ${{ steps.setup.outputs.output-path }} `
-            -ReleaseUri ${{ env.RELEASE_URI }}
+            -ReleaseUri ${{ env.RELEASE_URI }} `
+            -TagName ${{ steps.setup.outputs.tag-name }}
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           body: ${{ steps.setup.outputs.commit-messages }}
           files: ${{ env.OUTPUT_DIR }}/*.ps1
-          name: Build r${{ github.run_id }}
+          name: Build ${{ steps.setup.outputs.tag-name }}
           tag_name: ${{ steps.setup.outputs.tag-name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
