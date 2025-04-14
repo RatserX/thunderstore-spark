@@ -15,7 +15,7 @@ Below is a list of supported games, each with a link to their corresponding modp
 
 | Game           | Modpacks                                 |
 |----------------|------------------------------------------|
-| Lethal Company | [Setup Guide](./docs/LethalCompany.md)   |
+| Lethal Company | [Setup Guide](./docs/LETHALCOMPANY.md)   |
 | R.E.P.O.       | [Setup Guide](./docs/REPO.md)            |
 
 ## Contributing
