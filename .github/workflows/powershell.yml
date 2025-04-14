@@ -66,8 +66,8 @@ jobs:
         shell: pwsh
         run: |
           # Generate output
-          ROOT_PATH=$(pwd)
-          pwsh $ROOT_PATH/build.ps1 `
+          $rootPath=$(pwd)
+          pwsh $rootPath/build.ps1 `
             -BasePath ${{ steps.setup.outputs.base-path }} `
             -DocsPath ${{ steps.setup.outputs.docs-path }} `
             -ModpacksPath ${{ steps.setup.outputs.modpacks-path }} `
