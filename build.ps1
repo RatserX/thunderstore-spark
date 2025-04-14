@@ -38,7 +38,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
 
     # Define the readme content
     $readmeContent = "# $gameName`n"
-    $readmeContent = "##### $gameDescription`n"
+    $readmeContent += "$gameDescription`n"
 
     $modpackYaml.modpacks | ForEach-Object {
         $modpackAuthor = $_.author
@@ -47,7 +47,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
         $modpackVersion = $_.version
 
         $readmeContent += "### $modpackAuthor-$modpackName-$modpackVersion`n"
-        $readmeContent += "##### $modpackUri`n"
+        $readmeContent += "$modpackUri`n"
 
         # Loop through each PowerShell script in the base folder
         Get-ChildItem -Path $BasePath -Filter "*.ps1" | ForEach-Object {

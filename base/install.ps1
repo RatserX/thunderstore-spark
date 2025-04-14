@@ -1,4 +1,5 @@
 # Define global variables
+$gameDirectory = "GAME_DIRECTORY"
 $modpackAuthor = "MODPACK_AUTHOR"
 $modpackName = "MODPACK_NAME"
 $modpackVersion = "MODPACK_VERSION"
@@ -7,7 +8,7 @@ $modpackVersion = "MODPACK_VERSION"
 $ErrorActionPreference = 'Stop'
 
 # Ask the user for the modpack folder path
-$defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common"
+$defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\$gameDirectory"
 $modpackPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackPath)"
 if ([string]::IsNullOrWhiteSpace($modpackPath)) {
     $modpackPath = $defaultModpackPath
