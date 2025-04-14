@@ -4,8 +4,7 @@ param (
     [string]$DocsPath,
     [string]$ModpacksPath,
     [string]$OutputPath,
-    [string]$ReleaseUri,
-    [string]$TagName
+    [string]$ReleaseUri
 )
 
 # Change the ErrorActionPreference to 'Stop'

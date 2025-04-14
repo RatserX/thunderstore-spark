@@ -19,7 +19,6 @@ env:
   DOCS_DIR: docs
   MODPACKS_DIR: modpacks
   OUTPUT_DIR: output
-  RELEASE_URI: https://github.com/${{ github.repository }}/releases/download/${{ github.run_id }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -75,8 +74,7 @@ jobs:
             -DocsPath ${{ steps.setup.outputs.docs-path }} `
             -ModpacksPath ${{ steps.setup.outputs.modpacks-path }} `
             -OutputPath ${{ steps.setup.outputs.output-path }} `
-            -ReleaseUri ${{ env.RELEASE_URI }} `
-            -TagName ${{ steps.setup.outputs.tag-name }}
+            -ReleaseUri https://github.com/${{ github.repository }}/releases/download/${{ steps.setup.outputs.tag-name }} `
 
       - name: Create release
         uses: softprops/action-gh-release@v2
