@@ -1,9 +1,9 @@
-# ThunderFlash
+# Thunderstore Spark
 
 > This project is designed to simplify the setup of Thunderstore modpacks, especially for users who prefer not to use a mod manager or have friends who find mod managers cumbersome.
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RatserX/thunderstore-modpack-script/powershell.yml)
-![GitHub Release](https://img.shields.io/github/v/release/RatserX/thunderstore-modpack-script)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RatserX/thunderstore-spark/powershell.yml)
+![GitHub Release](https://img.shields.io/github/v/release/RatserX/thunderstore-spark)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H11DGC3V)
 
