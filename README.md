@@ -1,4 +1,4 @@
-# Thunderstore Modpack Script
+# ThunderFlash
 
 > This project is designed to simplify the setup of Thunderstore modpacks, especially for users who prefer not to use a mod manager or have friends who find mod managers cumbersome.
 
@@ -20,7 +20,7 @@ This project offers a collection of PowerShell scripts designed to streamline th
 
 ## Contributing
 
-The initial release of this project includes scripts for my own modpacks. If you'd like to add support for additional modpacks, you can either fork the project or submit a pull request.
+The initial release of this project includes scripts for my own modpacks. If you would like to add support for additional modpacks, you can either fork the project or submit a pull request.
 
 To contribute a new modpack, navigate to the `modpacks` directory and locate the `.yml` file corresponding to the game you want to add the modpack to. If no such file exists, create one using the format provided in `example.yml`. Ensure the `.yml` file name matches the game name, written in lowercase and without special characters. 
 

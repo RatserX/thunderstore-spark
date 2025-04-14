@@ -50,8 +50,8 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
         $modpackUri = $_.uri
         $modpackVersion = $_.version
 
-        $readmeContent += "### $modpackName $modpackVersion (By $modpackAuthor)`n"
-        $readmeContent += "$modpackUri`n"
+        $readmeContent += "### [$modpackName $modpackVersion (By $modpackAuthor)]($modpackUri)`n"
+        $readmeContent += "`n"
 
         # Loop through each PowerShell script in the base folder
         Get-ChildItem -Path $BasePath -Filter "*.ps1" | ForEach-Object {
