@@ -34,7 +34,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
     $gameName = $modpackYaml.game
 
     $readmeContent = "# $gameName`n"
-    $readmeContent = "`n"
+    $readmeContent += "`n"
 
     $modpackYaml.modpacks | ForEach-Object {
         $modpackAuthor = $_.author
@@ -46,7 +46,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
 
         # Loop through each PowerShell script in the base folder
         Get-ChildItem -Path $BasePath -Filter "*.ps1" | ForEach-Object {
-            $scriptName = (Get-Culture).TextInfo.ToTitleCase($_.BaseName)
+            $scriptName = $_.BaseName
             $scriptPath = $_.FullName
             $scriptContent = Get-Content -Path $scriptPath
 
@@ -63,9 +63,9 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
 
             $releaseUrl = "$ReleaseUrl/$outputPwshFileName"
             $readmeContent += "#### $scriptName`n"
-            $readmeContent += "`\`\`ps1`n"
+            $readmeContent += "```ps1`n"
             $readmeContent += "irm '$releaseUrl' | iex`n"
-            $readmeContent += "\`\`\``n"
+            $readmeContent += "``` `n"
             $readmeContent += "---`n"
         }
     }
