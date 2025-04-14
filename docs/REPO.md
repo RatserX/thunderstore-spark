@@ -6,48 +6,48 @@ R.E.P.O. is an online co-op horror game featuring physics, proximity voice chat 
 
 ### MildBobbySauce 1.7.0 (By Pixelomega)
 https://thunderstore.io/c/repo/p/Pixelomega/MildBobbySauce/
-#### Install
+#### Install Command
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438749004/REPO-Pixelomega-MildBobbySauce-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14439491632/REPO-Pixelomega-MildBobbySauce-Install.ps1' | iex
 ```` 
 
-#### Uninstall
+#### Uninstall Command
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438749004/REPO-Pixelomega-MildBobbySauce-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14439491632/REPO-Pixelomega-MildBobbySauce-Uninstall.ps1' | iex
 ```` 
 
 ---
 
 ### TangySpongeSauce 1.7.0 (By Pixelomega)
 https://thunderstore.io/c/repo/p/Pixelomega/TangySpongeSauce/
-#### Install
+#### Install Command
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438749004/REPO-Pixelomega-TangySpongeSauce-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14439491632/REPO-Pixelomega-TangySpongeSauce-Install.ps1' | iex
 ```` 
 
-#### Uninstall
+#### Uninstall Command
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438749004/REPO-Pixelomega-TangySpongeSauce-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14439491632/REPO-Pixelomega-TangySpongeSauce-Uninstall.ps1' | iex
 ```` 
 
 ---
 
 ### VolcanoSauce 1.7.0 (By Pixelomega)
 https://thunderstore.io/c/repo/p/Pixelomega/VolcanoSauce/
-#### Install
+#### Install Command
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438749004/REPO-Pixelomega-VolcanoSauce-Install.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14439491632/REPO-Pixelomega-VolcanoSauce-Install.ps1' | iex
 ```` 
 
-#### Uninstall
+#### Uninstall Command
 
 ````ps1
-irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14438749004/REPO-Pixelomega-VolcanoSauce-Uninstall.ps1' | iex
+irm 'https://github.com/RatserX/thunderstore-modpack-script/releases/download/r14439491632/REPO-Pixelomega-VolcanoSauce-Uninstall.ps1' | iex
 ```` 
 
 ---
