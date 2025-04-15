@@ -1,13 +1,13 @@
-# Thunderstore Spark
+# thunderstore-spark
 
-> This project is designed to simplify the setup of Thunderstore modpacks, especially for users who prefer not to use a mod manager or have friends who find mod managers cumbersome.
+> This project is designed to simplify the setup of Thunderstore modpacks, especially for users who prefer not to use a mod manager or have friends (like mine) who find mod managers cumbersome.
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RatserX/thunderstore-spark/powershell.yml)
 ![GitHub Release](https://img.shields.io/github/v/release/RatserX/thunderstore-spark)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H11DGC3V)
 
-It is important to note that this project is not intended to replace tools like [r2modman](https://github.com/ebkr/r2modmanPlus) or [Gale](https://github.com/Kesomannen/gale). These tools are highly recommended for managing mods effectively, and their use is strongly encouraged.
+It is important to note that this project is not intended to replace tools like [r2modman](https://github.com/ebkr/r2modmanPlus) or [Gale](https://github.com/Kesomannen/gale). These mod managers are highly recommended and their use is strongly encouraged.
 
 ## Usage
 

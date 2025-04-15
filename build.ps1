@@ -7,20 +7,20 @@ param (
     [string]$ReleaseUri
 )
 
-# Change the ErrorActionPreference to 'Stop'
-$ErrorActionPreference = 'Stop'
+# Change preference variables
+$ErrorActionPreference = "Stop"
 
 # Import modules
 Import-Module powershell-yaml
 
-# Ensure the docs folder path exists
+# Ensure the docs directory exists
 if (Test-Path -Path $DocsPath) {
     Get-ChildItem -Path $DocsPath -Exclude ".gitkeep" | Remove-Item -Recurse -Force
 } else {
     New-Item -ItemType Directory -Path $DocsPath | Out-Null
 }
 
-# Ensure the output folder path exists
+# Ensure the output directory exists
 if (!(Test-Path -Path $OutputPath)) {
     New-Item -ItemType Directory -Path $OutputPath | Out-Null
 }
@@ -75,7 +75,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
             $readmeContent += "#### $scriptName Command`n"
             $readmeContent += "`n"
             $readmeContent += "`````````ps1`n"
-            $readmeContent += "irm '$scriptUri' | iex`n"
+            $readmeContent += "irm `"$scriptUri`" | iex`n"
             $readmeContent += "````````` `n"
             $readmeContent += "`n"
         }

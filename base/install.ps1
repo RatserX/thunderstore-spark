@@ -4,30 +4,51 @@ $modpackAuthor = "MODPACK_AUTHOR"
 $modpackName = "MODPACK_NAME"
 $modpackVersion = "MODPACK_VERSION"
 
-# Change the ErrorActionPreference to 'Stop'
-$ErrorActionPreference = 'Stop'
+# Change preference variables
+$ErrorActionPreference = "Stop"
 
-# Ask the user for the modpack folder path
-$defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\$gameDirectory"
-$modpackPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackPath)"
-if ([string]::IsNullOrWhiteSpace($modpackPath)) {
-    $modpackPath = $defaultModpackPath
+# Ask the user for the modpack path
+$modpackPath = ""
+if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+    Add-Type -AssemblyName System.Windows.Forms
+
+    $defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\$gameDirectory"
+    $folderBrowserDialog = New-Object System.Windows.Forms.FolderBrowserDialog -Property @{
+        Description = "Select the modpack folder"
+        SelectedPath = $defaultModpackPath
+    }
+
+    $null = [System.Windows.Forms.Application]::EnableVisualStyles()
+    $folderBrowserOwner = New-Object System.Windows.Forms.Form -Property @{ TopMost = $true }
+    if ($folderBrowserDialog.ShowDialog($folderBrowserOwner) -eq [System.Windows.Forms.DialogResult]::OK) {
+        $modpackPath = $folderBrowserDialog.SelectedPath
+    }
+
+    $folderBrowserDialog.Dispose()
+    $folderBrowserOwner.Dispose()
+} else {
+    $defaultModpackPath = "${[Environment]::GetFolderPath("LocalApplicationData")}\Steam\steamapps\common\$gameDirectory"
+    $modpackPath = Read-Host "Enter the modpack path (Default: $defaultModpackPath)"
+    if ([string]::IsNullOrWhiteSpace($modpackPath)) {
+        $modpackPath = $defaultModpackPath
+    }
 }
 
-# Ask the user to confirm the modpack folder path
-$modpackPathConfirmation = Read-Host "Modpack folder path: $modpackPath. Is this correct? (y/n)"
-if ($modpackPathConfirmation -notmatch '^(y|Y)$') {
-    Write-Output "Exiting..."
+# Ask the user to confirm the modpack path
+$modpackPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($modpackPath)
+$modpackPathConfirmation = Read-Host "Modpack path: $modpackPath. Is this correct? (y/n)"
+if ($modpackPathConfirmation -notmatch "^(y|Y)$") {
+    Write-Output "Confirmation failed. Exiting..."
     exit
 }
 
-# Delete the "BepInEx" folder inside the modpack folder path
+# Delete the "BepInEx" directory inside the modpack path
 $modpackBepInExPath = Join-Path -Path $modpackPath -ChildPath "BepInEx"
 if (Test-Path -Path $modpackBepInExPath) {
     Remove-Item -Recurse -Force -Path $modpackBepInExPath
 }
 
-# Ensure the modpack folder path exists
+# Ensure the modpack directory exists
 if (!(Test-Path -Path $modpackPath)) {
     New-Item -ItemType Directory -Path $modpackPath | Out-Null
 }
@@ -56,11 +77,11 @@ foreach ($dependency in $dependencies) {
     $modInfo = "$modAuthor-$modName"
     $isBepInEx = $modInfo -eq "BepInEx-BepInExPack"
 
-    # Define the mod extract folder path
+    # Define the plugin extract directory
     $pluginExtractPath = "$modpackPath\BepInEx\plugins\$modInfo"
     Write-Output "Downloading mod: $modInfo-$modVersion."
 
-    # Ensure the mod extract folder path exists
+    # Ensure the plugin extract directory exists
     if (!(Test-Path -Path $pluginExtractPath)) {
         New-Item -ItemType Directory -Path $pluginExtractPath | Out-Null
     }
@@ -74,7 +95,7 @@ foreach ($dependency in $dependencies) {
     Expand-Archive -Path $pluginZipPath -DestinationPath $pluginExtractPath -Force
     Remove-Item -Force -Path $pluginZipPath
 
-    # Check for "BepInExPack" folder inside the extracted folder
+    # Check for "BepInExPack" directory inside the extracted plugin
     $pluginBepInExPackPath = Join-Path -Path $pluginExtractPath -ChildPath "BepInExPack"
     if (Test-Path -Path $pluginBepInExPackPath) {
         Get-ChildItem -Path $pluginBepInExPackPath -File -Depth 1 | Move-Item -Destination $modpackPath -Force
@@ -82,28 +103,28 @@ foreach ($dependency in $dependencies) {
         Remove-Item -Recurse -Force -Path $pluginBepInExPackPath
     }
 
-    # Check for "BepInEx" folder inside the extracted folder
+    # Check for "BepInEx" directory inside the extracted plugin
     $pluginBepInExPath = Join-Path -Path $pluginExtractPath -ChildPath "BepInEx"
     if (Test-Path -Path $pluginBepInExPath) {
         Get-ChildItem -Path $pluginBepInExPath -Recurse | Move-Item -Destination $pluginExtractPath -Force
         Remove-Item -Recurse -Force -Path $pluginBepInExPath
     }
 
-    # Check for other folders and move their contents
+    # Check for other directories and move their contents
     Get-ChildItem -Path $pluginExtractPath -Directory | ForEach-Object {
         $bepInExDirectory = $_.Name
         $bepInExPath = $_.FullName
 
-        # Skip folders named the same as the mod
+        # Skip directories named the same as the mod
         if ($bepInExDirectory -eq $modName) {
             return
         }
 
-        # Define the list of special folders
+        # Define the list of special directories
         $specialDirectories = @("patchers", "plugins")
         $isSpecialDirectory = $specialDirectories -contains $bepInExDirectory
 
-        # Define the mod folder path
+        # Define the mod directory
         $modPath = "$modpackPath\BepInEx\$bepInExDirectory"
         if ($isSpecialDirectory) {
             $modPath = "$modPath\$modInfo"
@@ -111,7 +132,7 @@ foreach ($dependency in $dependencies) {
 
         Write-Output "Installing mod: $modPath."
 
-        # Ensure the mod folder path exists
+        # Ensure the mod directory exists
         if (!(Test-Path -Path $modPath)) {
             New-Item -ItemType Directory -Path $modPath | Out-Null
         }
@@ -141,7 +162,7 @@ foreach ($dependency in $dependencies) {
         Remove-Item -Recurse -Force -Path $bepInExPath
     }
 
-    # Delete empty folders
+    # Delete empty directory
     $pluginItemsCount = Get-ChildItem -Path $pluginExtractPath -Recurse | Measure-Object -Property Length -Sum
     if ($isBepInEx -or $pluginItemsCount -eq 0) {
         Remove-Item -Recurse -Force -Path $pluginExtractPath

@@ -14,20 +14,41 @@ $itemsToDelete = @(
     # "winhttp.dll"
 )
 
-# Change the ErrorActionPreference to 'Stop'
-$ErrorActionPreference = 'Stop'
+# Change preference variables
+$ErrorActionPreference = "Stop"
 
-# Ask the user for the modpack folder path
-$defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\$gameDirectory"
-$modpackPath = Read-Host "Enter the modpack folder path (Default: $defaultModpackPath)"
-if ([string]::IsNullOrWhiteSpace($modpackPath)) {
-    $modpackPath = $defaultModpackPath
+# Ask the user for the modpack path
+$modpackPath = ""
+if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+    Add-Type -AssemblyName System.Windows.Forms
+
+    $defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\$gameDirectory"
+    $folderBrowserDialog = New-Object System.Windows.Forms.FolderBrowserDialog -Property @{
+        Description = "Select the modpack folder"
+        SelectedPath = $defaultModpackPath
+    }
+
+    $null = [System.Windows.Forms.Application]::EnableVisualStyles()
+    $folderBrowserOwner = New-Object System.Windows.Forms.Form -Property @{ TopMost = $true }
+    if ($folderBrowserDialog.ShowDialog($folderBrowserOwner) -eq [System.Windows.Forms.DialogResult]::OK) {
+        $modpackPath = $folderBrowserDialog.SelectedPath
+    }
+
+    $folderBrowserDialog.Dispose()
+    $folderBrowserOwner.Dispose()
+} else {
+    $defaultModpackPath = "${[Environment]::GetFolderPath("LocalApplicationData")}\Steam\steamapps\common\$gameDirectory"
+    $modpackPath = Read-Host "Enter the modpack path (Default: $defaultModpackPath)"
+    if ([string]::IsNullOrWhiteSpace($modpackPath)) {
+        $modpackPath = $defaultModpackPath
+    }
 }
 
-# Ask the user to confirm the modpack folder path
-$modpackPathConfirmation = Read-Host "Modpack folder path: $modpackPath. Is this correct? (y/n)"
-if ($modpackPathConfirmation -notmatch '^(y|Y)$') {
-    Write-Output "Exiting..."
+# Ask the user to confirm the modpack path
+$modpackPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($modpackPath)
+$modpackPathConfirmation = Read-Host "Modpack path: $modpackPath. Is this correct? (y/n)"
+if ($modpackPathConfirmation -notmatch "^(y|Y)$") {
+    Write-Output "Confirmation failed. Exiting..."
     exit
 }
 
@@ -38,7 +59,7 @@ $name = $manifestJson.name
 $versionNumber = $manifestJson.version_number
 
 if ($name -ne $modpackName -or $versionNumber -ne $modpackVersion) {
-    Write-Output "Manifest validation failed. Expected: $modpackName-$modpackVersion. Found name: $name-$versionNumber."
+    Write-Output "Manifest validation failed. Expected: $modpackName-$modpackVersion. Found name: $name-$versionNumber. Exiting..."
     exit
 }
 
