@@ -9,13 +9,13 @@ The Example is a sandbox game that allows players to create and explore their ow
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459606465/Example-FirstModpackAuthor-FirstModpackName-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459813045/Example-FirstModpackAuthor-FirstModpackName-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459606465/Example-FirstModpackAuthor-FirstModpackName-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459813045/Example-FirstModpackAuthor-FirstModpackName-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -25,13 +25,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1445960646
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459606465/Example-SecondModpackAuthor-SecondModpackName-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459813045/Example-SecondModpackAuthor-SecondModpackName-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459606465/Example-SecondModpackAuthor-SecondModpackName-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459813045/Example-SecondModpackAuthor-SecondModpackName-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -41,13 +41,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1445960646
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459606465/Example-ThirdModpackAuthor-ThirdModpackName-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459813045/Example-ThirdModpackAuthor-ThirdModpackName-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459606465/Example-ThirdModpackAuthor-ThirdModpackName-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14459813045/Example-ThirdModpackAuthor-ThirdModpackName-Uninstall.ps1" | iex
 ```` 
 
 ---
