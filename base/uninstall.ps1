@@ -17,43 +17,43 @@ $itemsToDelete = @(
 # Change preference variables
 $ErrorActionPreference = "Stop"
 
-# Ask the user for the modpack path
-$modpackPath = ""
+# Ask the user for the game path
+$gamePath = ""
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
     Add-Type -AssemblyName System.Windows.Forms
 
-    $defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\$gameDirectory"
+    $defaultGamePath = "$([Environment]::GetFolderPath("ProgramFilesX86"))\Steam\steamapps\common\$gameDirectory"
     $folderBrowserDialog = New-Object System.Windows.Forms.FolderBrowserDialog -Property @{
-        Description = "Select the modpack folder"
-        SelectedPath = $defaultModpackPath
+        Description = "Select the game folder"
+        SelectedPath = $defaultGamePath
     }
 
     $null = [System.Windows.Forms.Application]::EnableVisualStyles()
     $folderBrowserOwner = New-Object System.Windows.Forms.Form -Property @{ TopMost = $true }
     if ($folderBrowserDialog.ShowDialog($folderBrowserOwner) -eq [System.Windows.Forms.DialogResult]::OK) {
-        $modpackPath = $folderBrowserDialog.SelectedPath
+        $gamePath = $folderBrowserDialog.SelectedPath
     }
 
     $folderBrowserDialog.Dispose()
     $folderBrowserOwner.Dispose()
 } else {
-    $defaultModpackPath = "${[Environment]::GetFolderPath("LocalApplicationData")}\Steam\steamapps\common\$gameDirectory"
-    $modpackPath = Read-Host "Enter the modpack path (Default: $defaultModpackPath)"
-    if ([string]::IsNullOrWhiteSpace($modpackPath)) {
-        $modpackPath = $defaultModpackPath
+    $defaultGamePath = "$([Environment]::GetFolderPath("LocalApplicationData"))\Steam\steamapps\common\$gameDirectory"
+    $gamePath = Read-Host "Enter the game path (Default: $defaultGamePath)"
+    if ([string]::IsNullOrWhiteSpace($gamePath)) {
+        $gamePath = $defaultGamePath
     }
 }
 
-# Ask the user to confirm the modpack path
-$modpackPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($modpackPath)
-$modpackPathConfirmation = Read-Host "Modpack path: $modpackPath. Is this correct? (y/n)"
-if ($modpackPathConfirmation -notmatch "^(y|Y)$") {
+# Ask the user to confirm the game path
+$gamePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($gamePath)
+$gamePathConfirmation = Read-Host "Game path: $gamePath. Is this correct? (y/n)"
+if ($gamePathConfirmation -notmatch "^(y|Y)$") {
     Write-Output "Confirmation failed. Exiting..."
     exit
 }
 
 # Read the manifest.json file
-$manifestJsonPath = Join-Path -Path $modpackPath -ChildPath "manifest.json"
+$manifestJsonPath = Join-Path -Path $gamePath -ChildPath "manifest.json"
 $manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
 $name = $manifestJson.name
 $versionNumber = $manifestJson.version_number
@@ -65,7 +65,7 @@ if ($name -ne $modpackName -or $versionNumber -ne $modpackVersion) {
 
 # Delete the modpack
 foreach ($itemToDelete in $itemsToDelete) {
-    $itemPath = Join-Path -Path $modpackPath -ChildPath $itemToDelete
+    $itemPath = Join-Path -Path $gamePath -ChildPath $itemToDelete
 
     try {
         Remove-Item -Recurse -Force -Path $itemPath
@@ -77,4 +77,4 @@ foreach ($itemToDelete in $itemsToDelete) {
     }
 }
 
-Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully uninstalled from $modpackPath."
+Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully uninstalled from $gamePath."

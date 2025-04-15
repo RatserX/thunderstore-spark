@@ -7,63 +7,63 @@ $modpackVersion = "MODPACK_VERSION"
 # Change preference variables
 $ErrorActionPreference = "Stop"
 
-# Ask the user for the modpack path
-$modpackPath = ""
+# Ask the user for the game path
+$gamePath = ""
 if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
     Add-Type -AssemblyName System.Windows.Forms
 
-    $defaultModpackPath = "${Env:ProgramFiles(x86)}\Steam\steamapps\common\$gameDirectory"
+    $defaultGamePath = "$([Environment]::GetFolderPath("ProgramFilesX86"))\Steam\steamapps\common\$gameDirectory"
     $folderBrowserDialog = New-Object System.Windows.Forms.FolderBrowserDialog -Property @{
-        Description = "Select the modpack folder"
-        SelectedPath = $defaultModpackPath
+        Description = "Select the game folder"
+        SelectedPath = $defaultGamePath
     }
 
     $null = [System.Windows.Forms.Application]::EnableVisualStyles()
     $folderBrowserOwner = New-Object System.Windows.Forms.Form -Property @{ TopMost = $true }
     if ($folderBrowserDialog.ShowDialog($folderBrowserOwner) -eq [System.Windows.Forms.DialogResult]::OK) {
-        $modpackPath = $folderBrowserDialog.SelectedPath
+        $gamePath = $folderBrowserDialog.SelectedPath
     }
 
     $folderBrowserDialog.Dispose()
     $folderBrowserOwner.Dispose()
 } else {
-    $defaultModpackPath = "${[Environment]::GetFolderPath("LocalApplicationData")}\Steam\steamapps\common\$gameDirectory"
-    $modpackPath = Read-Host "Enter the modpack path (Default: $defaultModpackPath)"
-    if ([string]::IsNullOrWhiteSpace($modpackPath)) {
-        $modpackPath = $defaultModpackPath
+    $defaultGamePath = "$([Environment]::GetFolderPath("LocalApplicationData"))\Steam\steamapps\common\$gameDirectory"
+    $gamePath = Read-Host "Enter the game path (Default: $defaultGamePath)"
+    if ([string]::IsNullOrWhiteSpace($gamePath)) {
+        $gamePath = $defaultGamePath
     }
 }
 
-# Ask the user to confirm the modpack path
-$modpackPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($modpackPath)
-$modpackPathConfirmation = Read-Host "Modpack path: $modpackPath. Is this correct? (y/n)"
-if ($modpackPathConfirmation -notmatch "^(y|Y)$") {
+# Ask the user to confirm the game path
+$gamePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($gamePath)
+$gamePathConfirmation = Read-Host "Game path: $gamePath. Is this correct? (y/n)"
+if ($gamePathConfirmation -notmatch "^(y|Y)$") {
     Write-Output "Confirmation failed. Exiting..."
     exit
 }
 
-# Delete the "BepInEx" directory inside the modpack path
-$modpackBepInExPath = Join-Path -Path $modpackPath -ChildPath "BepInEx"
-if (Test-Path -Path $modpackBepInExPath) {
-    Remove-Item -Recurse -Force -Path $modpackBepInExPath
+# Ensure the game directory exists
+if (!(Test-Path -Path $gamePath)) {
+    New-Item -ItemType Directory -Path $gamePath | Out-Null
 }
 
-# Ensure the modpack directory exists
-if (!(Test-Path -Path $modpackPath)) {
-    New-Item -ItemType Directory -Path $modpackPath | Out-Null
+# Delete the "BepInEx" directory inside the game path
+$gameBepInExPath = Join-Path -Path $gamePath -ChildPath "BepInEx"
+if (Test-Path -Path $gameBepInExPath) {
+    Remove-Item -Recurse -Force -Path $gameBepInExPath
 }
 
 # Download the modpack
 $modpackUri = "https://thunderstore.io/package/download/$modpackAuthor/$modpackName/$modpackVersion/"
-$modpackZipPath = "$modpackPath\$modpackAuthor-$modpackName.zip"
+$modpackZipPath = "$gamePath\$modpackAuthor-$modpackName.zip"
 Invoke-WebRequest -Uri $modpackUri -OutFile $modpackZipPath
 
 # Extract the modpack
-Expand-Archive -Path $modpackZipPath -DestinationPath $modpackPath -Force
+Expand-Archive -Path $modpackZipPath -DestinationPath $gamePath -Force
 Remove-Item -Force -Path $modpackZipPath
 
 # Read the manifest.json file
-$manifestJsonPath = Join-Path -Path $modpackPath -ChildPath "manifest.json"
+$manifestJsonPath = Join-Path -Path $gamePath -ChildPath "manifest.json"
 $manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
 $dependencies = $manifestJson.dependencies
 
@@ -78,7 +78,7 @@ foreach ($dependency in $dependencies) {
     $isBepInEx = $modInfo -eq "BepInEx-BepInExPack"
 
     # Define the plugin extract directory
-    $pluginExtractPath = "$modpackPath\BepInEx\plugins\$modInfo"
+    $pluginExtractPath = "$gamePath\BepInEx\plugins\$modInfo"
     Write-Output "Downloading mod: $modInfo-$modVersion."
 
     # Ensure the plugin extract directory exists
@@ -98,7 +98,7 @@ foreach ($dependency in $dependencies) {
     # Check for "BepInExPack" directory inside the extracted plugin
     $pluginBepInExPackPath = Join-Path -Path $pluginExtractPath -ChildPath "BepInExPack"
     if (Test-Path -Path $pluginBepInExPackPath) {
-        Get-ChildItem -Path $pluginBepInExPackPath -File -Depth 1 | Move-Item -Destination $modpackPath -Force
+        Get-ChildItem -Path $pluginBepInExPackPath -File -Depth 1 | Move-Item -Destination $gamePath -Force
         Get-ChildItem -Path $pluginBepInExPackPath -Recurse | Move-Item -Destination $pluginExtractPath -Force
         Remove-Item -Recurse -Force -Path $pluginBepInExPackPath
     }
@@ -125,7 +125,7 @@ foreach ($dependency in $dependencies) {
         $isSpecialDirectory = $specialDirectories -contains $bepInExDirectory
 
         # Define the mod directory
-        $modPath = "$modpackPath\BepInEx\$bepInExDirectory"
+        $modPath = "$gamePath\BepInEx\$bepInExDirectory"
         if ($isSpecialDirectory) {
             $modPath = "$modPath\$modInfo"
         }
@@ -169,4 +169,4 @@ foreach ($dependency in $dependencies) {
     }
 }
 
-Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully installed to $modpackPath."
+Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully installed to $gamePath."
