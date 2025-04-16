@@ -6,15 +6,10 @@ game:
 modpacks:
   - author: FirstModpackAuthor
     name: FirstModpackName
-    uri: https://example/
+    uri: https://first.modpack.uri/
     version: 1.0.0
 
   - author: SecondModpackAuthor
     name: SecondModpackName
-    uri: https://example/
-    version: 1.0.0
-
-  - author: ThirdModpackAuthor
-    name: ThirdModpackName
-    uri: https://example/
+    uri: https://second.modpack.uri/
     version: 1.0.0
