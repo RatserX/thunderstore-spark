@@ -85,7 +85,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
     }
 
     # Save the doc file
-    $readmeMarkdownFileName = "$gameDirectory".ToUpper()
+    $readmeMarkdownFileName = "$gameDirectory".ToUpper().Trim()
     $readmeMarkdownFile = "$readmeMarkdownFileName.md"
     $readmeMarkdownPath = Join-Path -Path $DocsPath -ChildPath $readmeMarkdownFile
     Set-Content -Path $readmeMarkdownPath -Value $readmeContent

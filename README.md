@@ -17,6 +17,7 @@ This project offers a collection of PowerShell scripts designed to streamline th
 |----------------|------------------------------------------|
 | Lethal Company | [Setup Guide](./docs/LETHALCOMPANY.md)   |
 | R.E.P.O.       | [Setup Guide](./docs/REPO.md)            |
+| Schedule I     | [Setup Guide](./docs/SCHEDULEI.md)       |
 
 ## Contributing
 

@@ -67,51 +67,86 @@ $manifestJsonPath = Join-Path -Path $gamePath -ChildPath "manifest.json"
 $manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
 $dependencies = $manifestJson.dependencies
 
+# Check the mod loader
+$isBepInExPack = $false
+$isMelonLoader = $false
+$modLoaderPath = "$gamePath\Spark"
+$dependencyPath = "$modLoaderPath\mods"
+foreach ($dependency in $dependencies) {
+    $modLoaderFields = $dependency -split "-"
+    $modLoaderAuthor = $modLoaderFields[0]
+    $modLoaderName = $modLoaderFields[1]
+    $modLoaderVersion = $modLoaderFields[2]
+
+    if ($modLoaderAuthor -eq "BepInEx" -and $modLoaderName -eq "BepInExPack") {
+        $isBepInExPack = $true
+        $modLoaderPath = "$gamePath\BepInEx"
+        $dependencyPath = "$modLoaderPath\plugins"
+    } elseif ($modLoaderAuthor -eq "LavaGang" -and $modLoaderName -eq "MelonLoader") {
+        $isMelonLoader = $true
+        $modLoaderPath = "$gamePath\MelonLoader"
+        $dependencyPath = "$gamePath\Mods"
+    }
+
+    if ($isBepInExPack -or $isMelonLoader) {
+        Write-Output "Mod loader found: $modLoaderAuthor-$modLoaderName-$modLoaderVersion."
+        break
+    }
+}
+
+# Ensure the mod loader directory exists
+if (!(Test-Path -Path $modLoaderPath)) {
+    New-Item -ItemType Directory -Path $modLoaderPath | Out-Null
+}
+
+# Ensure the dependency directory exists
+if (!(Test-Path -Path $dependencyPath)) {
+    New-Item -ItemType Directory -Path $dependencyPath | Out-Null
+}
+
 # Process each dependency
 foreach ($dependency in $dependencies) {
     $modFields = $dependency -split "-"
     $modAuthor = $modFields[0]
     $modName = $modFields[1]
     $modVersion = $modFields[2]
-
     $modInfo = "$modAuthor-$modName"
-    $isBepInEx = $modInfo -eq "BepInEx-BepInExPack"
 
-    # Define the plugin extract directory
-    $pluginExtractPath = "$gamePath\BepInEx\plugins\$modInfo"
+    # Define the dependency extract directory
+    $dependencyExtractPath = "$dependencyPath\$modInfo"
     Write-Output "Downloading mod: $modInfo-$modVersion."
 
-    # Ensure the plugin extract directory exists
-    if (!(Test-Path -Path $pluginExtractPath)) {
-        New-Item -ItemType Directory -Path $pluginExtractPath | Out-Null
+    # Ensure the dependency extract directory exists
+    if (!(Test-Path -Path $dependencyExtractPath)) {
+        New-Item -ItemType Directory -Path $dependencyExtractPath | Out-Null
     }
 
     # Download the mod
     $modUri = "https://thunderstore.io/package/download/$modAuthor/$modName/$modVersion/"
-    $pluginZipPath = "$pluginExtractPath\$modInfo.zip"
-    Invoke-WebRequest -Uri $modUri -OutFile $pluginZipPath
+    $dependencyZipPath = "$dependencyExtractPath.zip"
+    Invoke-WebRequest -Uri $modUri -OutFile $dependencyZipPath
 
     # Extract the mod
-    Expand-Archive -Path $pluginZipPath -DestinationPath $pluginExtractPath -Force
-    Remove-Item -Force -Path $pluginZipPath
+    Expand-Archive -Path $dependencyZipPath -DestinationPath $dependencyExtractPath -Force
+    Remove-Item -Force -Path $dependencyZipPath
 
-    # Check for "BepInExPack" directory inside the extracted plugin
-    $pluginBepInExPackPath = Join-Path -Path $pluginExtractPath -ChildPath "BepInExPack"
-    if (Test-Path -Path $pluginBepInExPackPath) {
-        Get-ChildItem -Path $pluginBepInExPackPath -File -Depth 1 | Move-Item -Destination $gamePath -Force
-        Get-ChildItem -Path $pluginBepInExPackPath -Recurse | Move-Item -Destination $pluginExtractPath -Force
-        Remove-Item -Recurse -Force -Path $pluginBepInExPackPath
+    # Check for "BepInExPack" directory inside the extracted dependency
+    $bepInExPackPath = Join-Path -Path $dependencyExtractPath -ChildPath "BepInExPack"
+    if (Test-Path -Path $bepInExPackPath) {
+        Get-ChildItem -Path $bepInExPackPath -File -Depth 1 | Move-Item -Destination $gamePath -Force
+        Get-ChildItem -Path $bepInExPackPath -Recurse | Move-Item -Destination $dependencyExtractPath -Force
+        Remove-Item -Recurse -Force -Path $bepInExPackPath
     }
 
-    # Check for "BepInEx" directory inside the extracted plugin
-    $pluginBepInExPath = Join-Path -Path $pluginExtractPath -ChildPath "BepInEx"
-    if (Test-Path -Path $pluginBepInExPath) {
-        Get-ChildItem -Path $pluginBepInExPath -Recurse | Move-Item -Destination $pluginExtractPath -Force
-        Remove-Item -Recurse -Force -Path $pluginBepInExPath
+    # Check for "BepInEx" directory inside the extracted dependency
+    $bepInExPath = Join-Path -Path $dependencyExtractPath -ChildPath "BepInEx"
+    if (Test-Path -Path $bepInExPath) {
+        Get-ChildItem -Path $bepInExPath -Recurse | Move-Item -Destination $dependencyExtractPath -Force
+        Remove-Item -Recurse -Force -Path $bepInExPath
     }
 
     # Check for other directories and move their contents
-    Get-ChildItem -Path $pluginExtractPath -Directory | ForEach-Object {
+    Get-ChildItem -Path $dependencyExtractPath -Directory | ForEach-Object {
         $bepInExDirectory = $_.Name
         $bepInExPath = $_.FullName
 
@@ -125,7 +160,7 @@ foreach ($dependency in $dependencies) {
         $isSpecialDirectory = $specialDirectories -contains $bepInExDirectory
 
         # Define the mod directory
-        $modPath = "$gamePath\BepInEx\$bepInExDirectory"
+        $modPath = "$modLoaderPath\$bepInExDirectory"
         if ($isSpecialDirectory) {
             $modPath = "$modPath\$modInfo"
         }
@@ -162,10 +197,11 @@ foreach ($dependency in $dependencies) {
         Remove-Item -Recurse -Force -Path $bepInExPath
     }
 
-    # Delete empty directory
-    $pluginItemsCount = Get-ChildItem -Path $pluginExtractPath -Recurse | Measure-Object -Property Length -Sum
-    if ($isBepInEx -or $pluginItemsCount -eq 0) {
-        Remove-Item -Recurse -Force -Path $pluginExtractPath
+    # Cleanup the install directories
+    $modLoaderDirectories = @("BepInEx-BepInExPack", "LavaGang-MelonLoader")
+    $dependencyItemsCount = Get-ChildItem -Path $dependencyExtractPath -Recurse | Measure-Object -Property Length -Sum
+    if ($modLoaderDirectories -contains $modInfo -or $dependencyItemsCount -eq 0) {
+        Remove-Item -Recurse -Force -Path $dependencyExtractPath
     }
 }
 

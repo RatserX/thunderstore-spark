@@ -11,7 +11,14 @@ $itemsToDelete = @(
     "manifest.json",
     "README.md"
     # "doorstop_config.ini",
-    # "winhttp.dll"
+    # "winhttp.dll",
+    "_state",
+    "MelonLoader",
+    "Mods",
+    "Plugins",
+    "UserData",
+    "UserLibs",
+    "version.dll"
 )
 
 # Change preference variables
@@ -68,7 +75,7 @@ foreach ($itemToDelete in $itemsToDelete) {
     $itemPath = Join-Path -Path $gamePath -ChildPath $itemToDelete
 
     try {
-        Remove-Item -Recurse -Force -Path $itemPath
+        Remove-Item -Recurse -Force -Path $itemPath -ErrorAction SilentlyContinue
     } catch [System.IO.IOException] {
         Write-Output "Unable to remove $itemPath."
     } catch {
