@@ -9,13 +9,13 @@ From small-time dope pusher to kingpin - manufacture and distribute a range of d
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Schedule I-Pixelomega-MildBobbySauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-MildBobbySauce-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Schedule I-Pixelomega-MildBobbySauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-MildBobbySauce-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -25,13 +25,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1456665415
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Schedule I-Pixelomega-TangySpongeSauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-TangySpongeSauce-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Schedule I-Pixelomega-TangySpongeSauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-TangySpongeSauce-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -41,13 +41,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1456665415
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Schedule I-Pixelomega-VolcanoSauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-VolcanoSauce-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Schedule I-Pixelomega-VolcanoSauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-VolcanoSauce-Uninstall.ps1" | iex
 ```` 
 
 ---

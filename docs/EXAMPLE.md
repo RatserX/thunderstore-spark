@@ -9,13 +9,13 @@ The Example is a sandbox game that allows players to create and explore their ow
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Example-FirstModpackAuthor-FirstModpackName-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Example-FirstModpackAuthor-FirstModpackName-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Example-FirstModpackAuthor-FirstModpackName-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Example-FirstModpackAuthor-FirstModpackName-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -25,13 +25,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1456665415
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Example-SecondModpackAuthor-SecondModpackName-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Example-SecondModpackAuthor-SecondModpackName-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14566654153/Example-SecondModpackAuthor-SecondModpackName-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Example-SecondModpackAuthor-SecondModpackName-Uninstall.ps1" | iex
 ```` 
 
 ---
