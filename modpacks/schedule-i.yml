@@ -5,16 +5,16 @@ game:
   name: Schedule I
 modpacks:
   - author: Pixelomega
-    name: MildBobbySauce
-    uri: https://thunderstore.io/c/schedule-i/p/Pixelomega/MildBobbySauce/
+    name: MildBobbySauceForScheduleIIL2CPP
+    uri: https://thunderstore.io/c/schedule-i/p/Pixelomega/MildBobbySauceForScheduleIIL2CPP/
     version: 1.0.0
 
   - author: Pixelomega
-    name: TangySpongeSauce
-    uri: https://thunderstore.io/c/schedule-i/p/Pixelomega/TangySpongeSauce/
+    name: TangySpongeSauceForScheduleIIL2CPP
+    uri: https://thunderstore.io/c/schedule-i/p/Pixelomega/TangySpongeSauceForScheduleIIL2CPP/
     version: 1.0.0
 
   - author: Pixelomega
-    name: VolcanoSauce
-    uri: https://thunderstore.io/c/schedule-i/p/Pixelomega/VolcanoSauce/
+    name: VolcanoSauceForScheduleIIL2CPP
+    uri: https://thunderstore.io/c/schedule-i/p/Pixelomega/VolcanoSauceForScheduleIIL2CPP/
     version: 1.0.0
