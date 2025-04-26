@@ -4,50 +4,50 @@ From small-time dope pusher to kingpin - manufacture and distribute a range of d
 
 ## Modpacks
 
-### [MildBobbySauce 1.0.0 (By Pixelomega)](https://thunderstore.io/c/schedule-i/p/Pixelomega/MildBobbySauce/)
+### [MildBobbySauceForScheduleIIL2CPP 1.0.0 (By Pixelomega)](https://thunderstore.io/c/schedule-i/p/Pixelomega/MildBobbySauceForScheduleIIL2CPP/)
 
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-MildBobbySauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/Schedule I-Pixelomega-MildBobbySauceForScheduleIIL2CPP-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-MildBobbySauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/Schedule I-Pixelomega-MildBobbySauceForScheduleIIL2CPP-Uninstall.ps1" | iex
 ```` 
 
 ---
 
-### [TangySpongeSauce 1.0.0 (By Pixelomega)](https://thunderstore.io/c/schedule-i/p/Pixelomega/TangySpongeSauce/)
+### [TangySpongeSauceForScheduleIIL2CPP 1.0.0 (By Pixelomega)](https://thunderstore.io/c/schedule-i/p/Pixelomega/TangySpongeSauceForScheduleIIL2CPP/)
 
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-TangySpongeSauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/Schedule I-Pixelomega-TangySpongeSauceForScheduleIIL2CPP-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-TangySpongeSauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/Schedule I-Pixelomega-TangySpongeSauceForScheduleIIL2CPP-Uninstall.ps1" | iex
 ```` 
 
 ---
 
-### [VolcanoSauce 1.0.0 (By Pixelomega)](https://thunderstore.io/c/schedule-i/p/Pixelomega/VolcanoSauce/)
+### [VolcanoSauceForScheduleIIL2CPP 1.0.0 (By Pixelomega)](https://thunderstore.io/c/schedule-i/p/Pixelomega/VolcanoSauceForScheduleIIL2CPP/)
 
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-VolcanoSauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/Schedule I-Pixelomega-VolcanoSauceForScheduleIIL2CPP-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/Schedule I-Pixelomega-VolcanoSauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/Schedule I-Pixelomega-VolcanoSauceForScheduleIIL2CPP-Uninstall.ps1" | iex
 ```` 
 
 ---

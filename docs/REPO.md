@@ -4,50 +4,50 @@ R.E.P.O. is an online co-op horror game featuring physics, proximity voice chat 
 
 ## Modpacks
 
-### [MildBobbySauce 1.10.0 (By Pixelomega)](https://thunderstore.io/c/repo/p/Pixelomega/MildBobbySauce/)
+### [MildBobbySauceForRepo 2.0.0 (By Pixelomega)](https://thunderstore.io/c/repo/p/Pixelomega/MildBobbySauceForRepo/)
 
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/REPO-Pixelomega-MildBobbySauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/REPO-Pixelomega-MildBobbySauceForRepo-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/REPO-Pixelomega-MildBobbySauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/REPO-Pixelomega-MildBobbySauceForRepo-Uninstall.ps1" | iex
 ```` 
 
 ---
 
-### [TangySpongeSauce 1.10.0 (By Pixelomega)](https://thunderstore.io/c/repo/p/Pixelomega/TangySpongeSauce/)
+### [TangySpongeSauceForRepo 2.0.0 (By Pixelomega)](https://thunderstore.io/c/repo/p/Pixelomega/TangySpongeSauceForRepo/)
 
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/REPO-Pixelomega-TangySpongeSauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/REPO-Pixelomega-TangySpongeSauceForRepo-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/REPO-Pixelomega-TangySpongeSauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/REPO-Pixelomega-TangySpongeSauceForRepo-Uninstall.ps1" | iex
 ```` 
 
 ---
 
-### [VolcanoSauce 1.10.0 (By Pixelomega)](https://thunderstore.io/c/repo/p/Pixelomega/VolcanoSauce/)
+### [VolcanoSauceForRepo 2.0.0 (By Pixelomega)](https://thunderstore.io/c/repo/p/Pixelomega/VolcanoSauceForRepo/)
 
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/REPO-Pixelomega-VolcanoSauce-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/REPO-Pixelomega-VolcanoSauceForRepo-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14567923917/REPO-Pixelomega-VolcanoSauce-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14676852193/REPO-Pixelomega-VolcanoSauceForRepo-Uninstall.ps1" | iex
 ```` 
 
 ---
