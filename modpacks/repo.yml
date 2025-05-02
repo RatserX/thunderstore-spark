@@ -7,14 +7,14 @@ modpacks:
   - author: Pixelomega
     name: MildBobbySauceForRepo
     uri: https://thunderstore.io/c/repo/p/Pixelomega/MildBobbySauceForRepo/
-    version: 2.0.0
+    version: 2.1.0
 
   - author: Pixelomega
     name: TangySpongeSauceForRepo
     uri: https://thunderstore.io/c/repo/p/Pixelomega/TangySpongeSauceForRepo/
-    version: 2.0.0
+    version: 2.1.0
 
   - author: Pixelomega
     name: VolcanoSauceForRepo
     uri: https://thunderstore.io/c/repo/p/Pixelomega/VolcanoSauceForRepo/
-    version: 2.0.0
+    version: 2.1.0
