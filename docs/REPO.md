@@ -9,13 +9,13 @@ R.E.P.O. is an online co-op horror game featuring physics, proximity voice chat 
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853334268/REPO-Pixelomega-MildBobbySauceForRepo-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/REPO-Pixelomega-MildBobbySauceForRepo-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853334268/REPO-Pixelomega-MildBobbySauceForRepo-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/REPO-Pixelomega-MildBobbySauceForRepo-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -25,13 +25,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1485333426
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853334268/REPO-Pixelomega-TangySpongeSauceForRepo-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/REPO-Pixelomega-TangySpongeSauceForRepo-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853334268/REPO-Pixelomega-TangySpongeSauceForRepo-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/REPO-Pixelomega-TangySpongeSauceForRepo-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -41,13 +41,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1485333426
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853334268/REPO-Pixelomega-VolcanoSauceForRepo-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/REPO-Pixelomega-VolcanoSauceForRepo-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853334268/REPO-Pixelomega-VolcanoSauceForRepo-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/REPO-Pixelomega-VolcanoSauceForRepo-Uninstall.ps1" | iex
 ```` 
 
 ---
