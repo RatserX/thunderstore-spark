@@ -54,7 +54,7 @@ function Install-Base {
 
     # Check the mod loader
     $modLoaderType, $modLoaderPath, $dependencyPath, $modLoaderInfo = Find-ModLoader -GamePath $gamePath -Dependencies $dependencies
-    Write-Output "Using mod loader: $modLoaderInfo."
+    Write-Output "Installing mod loader: $modLoaderInfo."
 
     # Ensure the mod loader directory exists
     if (!(Test-Path -Path $modLoaderPath)) {
@@ -70,11 +70,12 @@ function Install-Base {
     foreach ($dependency in $dependencies) {
         $modFields = $dependency -split "-"
         $modAuthor, $modName, $modVersion = $modFields
-        $modInfo = "$modAuthor-$modName"
+        $modKey = "$modAuthor-$modName"
+        $modInfo = "$modKey-$modVersion"
 
         # Define the dependency extract directory
-        $dependencyExtractPath = "$dependencyPath\$modInfo"
-        Write-Output "Downloading mod: $modInfo-$modVersion."
+        $dependencyExtractPath = "$dependencyPath\$modKey"
+        Write-Output "Installing mod: $modInfo."
 
         # Ensure the dependency extract directory exists
         if (!(Test-Path -Path $dependencyExtractPath)) {
@@ -122,10 +123,10 @@ function Install-Base {
             # Define the mod directory
             $modPath = "$modLoaderPath\$bepInExDirectory"
             if ($isSpecialDirectory) {
-                $modPath = "$modPath\$modInfo"
+                $modPath = "$modPath\$modKey"
             }
 
-            Write-Output "Installing mod: $modPath."
+            Write-Output "Configuring mod: $modInfo."
 
             # Ensure the mod directory exists
             if (!(Test-Path -Path $modPath)) {
@@ -162,9 +163,8 @@ function Install-Base {
         }
 
         # Cleanup the install directories
-        $modLoaderDirectories = @("BepInEx-BepInExPack", "LavaGang-MelonLoader")
         $dependencyItemsCount = Get-ChildItem -Path $dependencyExtractPath -Recurse | Measure-Object -Property Length -Sum
-        if ($modLoaderDirectories -contains $modInfo -or $dependencyItemsCount -eq 0) {
+        if ($modLoaderType -ne 0 -or $dependencyItemsCount -eq 0) {
             Remove-Item -Recurse -Force -Path $dependencyExtractPath
         }
     }
