@@ -164,7 +164,7 @@ function Install-Base {
 
         # Cleanup the install directories
         $dependencyItemsCount = Get-ChildItem -Path $dependencyExtractPath -Recurse | Measure-Object -Property Length -Sum
-        if ($modLoaderType -ne 0 -or $dependencyItemsCount -eq 0) {
+        if ($modLoaderInfo -eq $modInfo -or $dependencyItemsCount -eq 0) {
             Remove-Item -Recurse -Force -Path $dependencyExtractPath
         }
     }
