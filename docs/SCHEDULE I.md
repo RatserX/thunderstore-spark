@@ -9,13 +9,13 @@ From small-time dope pusher to kingpin - manufacture and distribute a range of d
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/Schedule I-Pixelomega-MildBobbySauceForScheduleIIL2CPP-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14854039009/Schedule I-Pixelomega-MildBobbySauceForScheduleIIL2CPP-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/Schedule I-Pixelomega-MildBobbySauceForScheduleIIL2CPP-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14854039009/Schedule I-Pixelomega-MildBobbySauceForScheduleIIL2CPP-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -25,13 +25,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1485358603
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/Schedule I-Pixelomega-TangySpongeSauceForScheduleIIL2CPP-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14854039009/Schedule I-Pixelomega-TangySpongeSauceForScheduleIIL2CPP-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/Schedule I-Pixelomega-TangySpongeSauceForScheduleIIL2CPP-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14854039009/Schedule I-Pixelomega-TangySpongeSauceForScheduleIIL2CPP-Uninstall.ps1" | iex
 ```` 
 
 ---
@@ -41,13 +41,13 @@ irm "https://github.com/RatserX/thunderstore-spark/releases/download/r1485358603
 #### Install Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/Schedule I-Pixelomega-VolcanoSauceForScheduleIIL2CPP-Install.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14854039009/Schedule I-Pixelomega-VolcanoSauceForScheduleIIL2CPP-Install.ps1" | iex
 ```` 
 
 #### Uninstall Command
 
 ````ps1
-irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14853586036/Schedule I-Pixelomega-VolcanoSauceForScheduleIIL2CPP-Uninstall.ps1" | iex
+irm "https://github.com/RatserX/thunderstore-spark/releases/download/r14854039009/Schedule I-Pixelomega-VolcanoSauceForScheduleIIL2CPP-Uninstall.ps1" | iex
 ```` 
 
 ---
