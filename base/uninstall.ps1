@@ -17,8 +17,8 @@ function Uninstall-Base {
     )
 
     # Prompt the user to select or enter the game path
-    $selectedPath = Find-GamePath -GameDirectory $GameDirectory
-    $gamePath = Get-GamePath -SelectedPath $selectedPath
+    $initialPath = Find-GamePath -GameDirectory $GameDirectory
+    $gamePath = Get-GamePath -InitialPath $initialPath
 
     # Confirm the selected game path with the user
     $isValidGamePath = Confirm-GamePath -GamePath $gamePath
