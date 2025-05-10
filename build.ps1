@@ -9,27 +9,28 @@ param (
 
 # Change preference variables
 $ErrorActionPreference = "Stop"
+$InformationPreference = "Continue"
 
 # Import modules
 Import-Module powershell-yaml
 
-# Ensure the docs directory exists
-if (Test-Path -Path $DocsPath) {
-    Get-ChildItem -Path $DocsPath -Exclude ".gitkeep" | Remove-Item -Recurse -Force
-} else {
+# Ensure docs directory exist
+if (!(Test-Path -Path $DocsPath)) {
     New-Item -ItemType Directory -Path $DocsPath | Out-Null
+} else {
+    Get-ChildItem -Path $DocsPath -Exclude ".gitkeep" | Remove-Item -Recurse -Force
 }
 
-# Ensure the output directory exists
+# Ensure output directory exist
 if (!(Test-Path -Path $OutputPath)) {
     New-Item -ItemType Directory -Path $OutputPath | Out-Null
 }
 
-# Process each modpack
+# Process each modpack YAML file
 Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
     $modpackYamlPath = $_.FullName
 
-    # Read the .yml file
+    # Parse .yml
     $modpackYaml = Get-Content -Path $modpackYamlPath | ConvertFrom-Yaml
     $game = $modpackYaml.game
     $gameDescription = $game.description
@@ -44,6 +45,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
     $readmeContent += "## Modpacks`n"
     $readmeContent += "`n"
 
+    # Process each modpack entry
     $modpackYaml.modpacks | ForEach-Object {
         $modpackAuthor = $_.author
         $modpackName = $_.name
@@ -53,7 +55,7 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
         $readmeContent += "### [$modpackName $modpackVersion (By $modpackAuthor)]($modpackUri)`n"
         $readmeContent += "`n"
 
-        # Loop through each PowerShell script in the base folder
+        # Process each PowerShell script
         Get-ChildItem -Path $BasePath -Filter "*.ps1" | ForEach-Object {
             $scriptName = $scriptName = (Get-Culture).TextInfo.ToTitleCase($_.BaseName)
             $scriptPath = $_.FullName
@@ -65,12 +67,13 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
             $scriptContent = $scriptContent -replace "MODPACK_NAME", $modpackName
             $scriptContent = $scriptContent -replace "MODPACK_VERSION", $modpackVersion
 
-            # Save the output file
+            # Save the generated script
             $outputPwshFile = "$gameDirectory-$modpackAuthor-$modpackName-$scriptName.ps1"
             $outputPwshPath = Join-Path -Path $OutputPath -ChildPath $outputPwshFile
             Set-Content -Path $outputPwshPath -Value $scriptContent
-            Write-Output "$outputPwshFile has been successfully generated to $OutputPath."
+            Write-Information "$outputPwshFile has been successfully generated to $OutputPath."
 
+            # Define the usage block for this script
             $scriptUri = "$ReleaseUri/$outputPwshFile"
             $readmeContent += "#### $scriptName Command`n"
             $readmeContent += "`n"
@@ -84,10 +87,10 @@ Get-ChildItem -Path $ModpacksPath -Filter "*.yml" | ForEach-Object {
         $readmeContent += "`n"
     }
 
-    # Save the doc file
+    # Save the generated Markdown documentation
     $readmeMarkdownFileName = "$gameDirectory".ToUpper().Trim()
     $readmeMarkdownFile = "$readmeMarkdownFileName.md"
     $readmeMarkdownPath = Join-Path -Path $DocsPath -ChildPath $readmeMarkdownFile
     Set-Content -Path $readmeMarkdownPath -Value $readmeContent
-    Write-Output "$readmeMarkdownFile has been successfully generated to $DocsPath."
+    Write-Information "$readmeMarkdownFile has been successfully generated to $DocsPath."
 }

@@ -6,6 +6,7 @@ $modpackVersion = "MODPACK_VERSION"
 
 # Change preference variables
 $ErrorActionPreference = "Stop"
+$InformationPreference = "Continue"
 
 function Uninstall-Base {
     param (
@@ -15,60 +16,76 @@ function Uninstall-Base {
         [string]$ModpackVersion
     )
 
-    $itemsToDelete = @(
-        "BepInEx",
-        "CHANGELOG.md",
-        "icon.png",
-        "manifest.json",
-        "README.md"
-        # "doorstop_config.ini",
-        # "winhttp.dll",
-        "_state",
-        "MelonLoader",
-        "Mods",
-        "Plugins",
-        "UserData",
-        "UserLibs",
-        "version.dll"
-    )
-
-    # Ask the user for the game path
+    # Prompt the user to select or enter the game path
     $selectedPath = Find-GamePath -GameDirectory $GameDirectory
     $gamePath = Get-GamePath -SelectedPath $selectedPath
 
-    # Ask the user to confirm the game path
+    # Confirm the selected game path with the user
     $isValidGamePath = Confirm-GamePath -GamePath $gamePath
     if ($isValidGamePath -eq $false) {
-        Write-Output "Confirmation failed. Exiting..."
+        Write-Information "Confirmation failed. Exiting..."
         exit
     }
 
-    # Read the manifest.json file
+    # Define the modpack info
+    $modpackInfo = "$ModpackAuthor-$ModpackName-$ModpackVersion"
+    Write-Information "Uninstalling modpack: $modpackInfo."
+
+    # Check for the manifest.json file
     $manifestJsonPath = Join-Path -Path $gamePath -ChildPath "manifest.json"
-    $manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
-    $name = $manifestJson.name
-    $versionNumber = $manifestJson.version_number
-    
-    if ($name -ne $modpackName -or $versionNumber -ne $modpackVersion) {
-        Write-Output "Manifest validation failed. Expected: $modpackName-$modpackVersion. Found name: $name-$versionNumber. Exiting..."
+    if (!(Test-Path -Path $manifestJsonPath)) {
+        Write-Information "Manifest not found. Exiting..."
         exit
     }
-    
-    # Delete the modpack
-    foreach ($itemToDelete in $itemsToDelete) {
-        $itemPath = Join-Path -Path $gamePath -ChildPath $itemToDelete
-    
+
+    # Parse manifest.json
+    $manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
+    $dependencies = $manifestJson.dependencies
+    $name = $manifestJson.name
+    $versionNumber = $manifestJson.version_number
+
+    # Check the manifest
+    if ($name -ne $modpackName) {
+        Write-Information "Manifest validation failed. Version: $versionNumber. Found: $name. Expected: $modpackName. Exiting..."
+        exit
+    }
+
+    # Determine the mod loader type and relevant paths
+    $modLoaderType, $modLoaderPath, $modContainerPath, $modLoaderKey, $modLoaderVersion = Find-ModLoader -GamePath $gamePath -Dependencies $dependencies
+    $modLoaderInfo = "$modLoaderKey-$modLoaderVersion"
+
+    # Clean up the game directory
+    Clear-GamePath -GamePath $gamePath -ModLoaderKey $modLoaderKey
+    Write-Information "$modLoaderInfo has been successfully uninstalled from $gamePath."
+}
+
+function Clear-GamePath {
+    param (
+        [string]$GamePath,
+        [string]$ModLoaderKey = "Base-Spark"
+    )
+
+    $modLoaders = @{
+        "Base-Spark" = @("Spark", "Spark\mods")
+        "BepInEx-BepInExPack" = @("BepInEx", "doorstop_config.ini", "winhttp.dll")
+        "LavaGang-MelonLoader" = @("_state", "MelonLoader", "Mods", "Plugins", "UserData", "UserLibs", "version.dll")
+    }
+
+    $gameInternalRelativePaths = $modLoaders[$ModLoaderKey] + @("CHANGELOG.md", "icon.png", "manifest.json", "README.md")
+    Write-Information "Removing mod loader: $ModLoaderKey."
+
+    foreach ($gameInternalRelativePath in $gameInternalRelativePaths) {
+        $gameInternalPath = Join-Path -Path $GamePath -ChildPath $gameInternalRelativePath
+
         try {
-            Remove-Item -Recurse -Force -Path $itemPath -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path $gameInternalPath -ErrorAction SilentlyContinue
         } catch [System.IO.IOException] {
-            Write-Output "Unable to remove $itemPath."
+            Write-Information "Unable to remove $gameInternalPath."
         } catch {
-            Write-Output "An error occurred that could not be resolved."
-            Write-Output $_
+            Write-Information "An error occurred that could not be resolved."
+            Write-Information $_
         }
     }
-    
-    Write-Output "$modpackAuthor-$modpackName-$modpackVersion has been successfully uninstalled from $gamePath."
 }
 
 function Confirm-GamePath {
@@ -159,9 +176,7 @@ function Get-GamePath {
                 $gamePath = $selectedPath
             }
 
-            if (Test-Path -Path $gamePath) {
-                break
-            }
+            if (Test-Path -Path $gamePath) { break }
         }
     }
 
@@ -175,8 +190,9 @@ function Find-ModLoader {
         [string[]]$Dependencies
     )
 
+    $defaultModLoaderKey = "Base-Spark"
     $modLoaders = @{
-        "Base-Spark" = @(0, "$GamePath\Spark", "$GamePath\Spark\mods", "0.0.0")
+        $defaultModLoaderKey = @(0, "$GamePath\Spark", "$GamePath\Spark\mods", "Pixelomega-Spark-0.0.0")
         "BepInEx-BepInExPack" = @(1, "$GamePath\BepInEx", "$GamePath\BepInEx\plugins")
         "LavaGang-MelonLoader" = @(2, "$GamePath\MelonLoader", "$GamePath\Mods")
     }
@@ -186,14 +202,16 @@ function Find-ModLoader {
         $modLoaderKey = "$modLoaderAuthor-$modLoaderName"
 
         if ($modLoaders.ContainsKey($modLoaderKey)) {
-            $modLoaderInfo = "$modLoaderKey-$modLoaderVersion"
             $modLoader = $modLoaders[$modLoaderKey]
-            $modLoader += $modLoaderInfo
+            $modLoader += @($modLoaderKey, $modLoaderVersion)
+
+            Write-Information "Mod loader found. Using: $modLoaderKey."
             return $modLoader
         }
     }
 
-    return $modLoaders["Base-Spark"]
+    Write-Information "Mod loader not found. Using: $defaultModLoaderKey."
+    return $modLoaders[$defaultModLoaderKey]
 }
 
 Uninstall-Base -GameDirectory $gameDirectory -ModpackAuthor $modpackAuthor -ModpackName $modpackName -ModpackVersion $modpackVersion

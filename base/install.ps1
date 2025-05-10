@@ -6,6 +6,7 @@ $modpackVersion = "MODPACK_VERSION"
 
 # Change preference variables
 $ErrorActionPreference = "Stop"
+$InformationPreference = "Continue"
 
 function Install-Base {
     param (
@@ -15,161 +16,122 @@ function Install-Base {
         [string]$ModpackVersion
     )
 
-    # Ask the user for the game path
+    # Prompt the user to select or enter the game path
     $selectedPath = Find-GamePath -GameDirectory $GameDirectory
     $gamePath = Get-GamePath -SelectedPath $selectedPath
 
-    # Ask the user to confirm the game path
+    # Confirm the selected game path with the user
     $isValidGamePath = Confirm-GamePath -GamePath $gamePath
     if ($isValidGamePath -eq $false) {
-        Write-Output "Confirmation failed. Exiting..."
+        Write-Information "Confirmation failed. Exiting..."
         exit
     }
 
-    # Ensure the game directory exists
-    if (!(Test-Path -Path $gamePath)) {
-        New-Item -ItemType Directory -Path $gamePath | Out-Null
-    }
-
-    # Delete the "BepInEx" directory inside the game path
-    $gameBepInExPath = Join-Path -Path $gamePath -ChildPath "BepInEx"
-    if (Test-Path -Path $gameBepInExPath) {
-        Remove-Item -Recurse -Force -Path $gameBepInExPath
-    }
-
-    # Download the modpack
+    # Define the modpack info
     $modpackInfo = "$ModpackAuthor-$ModpackName-$ModpackVersion"
+    Write-Information "Installing modpack: $modpackInfo."
+
+    # Download the modpack archive
     $modpackUri = "https://thunderstore.io/package/download/$ModpackAuthor/$ModpackName/$ModpackVersion/"
     $modpackZipPath = "$gamePath\$modpackInfo.zip"
     Invoke-WebRequest -Uri $modpackUri -OutFile $modpackZipPath
-
-    # Extract the modpack
     Expand-Archive -Path $modpackZipPath -DestinationPath $gamePath -Force
-    Remove-Item -Force -Path $modpackZipPath
 
-    # Read the manifest.json file
+    # Check for the manifest.json file
     $manifestJsonPath = Join-Path -Path $gamePath -ChildPath "manifest.json"
+    if (!(Test-Path -Path $manifestJsonPath)) {
+        Write-Information "Manifest not found. Exiting..."
+        exit
+    }
+
+    # Parse manifest.json
     $manifestJson = Get-Content -Path $manifestJsonPath | ConvertFrom-Json
     $dependencies = $manifestJson.dependencies
 
-    # Check the mod loader
-    $modLoaderType, $modLoaderPath, $dependencyPath, $modLoaderInfo = Find-ModLoader -GamePath $gamePath -Dependencies $dependencies
-    Write-Output "Installing mod loader: $modLoaderInfo."
+    # Determine the mod loader type and relevant paths
+    $modLoaderType, $modLoaderPath, $modContainerPath, $modLoaderKey, $modLoaderVersion = Find-ModLoader -GamePath $gamePath -Dependencies $dependencies
+    $modLoaderInfo = "$modLoaderKey-$modLoaderVersion"
 
-    # Ensure the mod loader directory exists
+    # Ensure mod loader directory exist
     if (!(Test-Path -Path $modLoaderPath)) {
         New-Item -ItemType Directory -Path $modLoaderPath | Out-Null
     }
 
-    # Ensure the dependency directory exists
-    if (!(Test-Path -Path $dependencyPath)) {
-        New-Item -ItemType Directory -Path $dependencyPath | Out-Null
+    # Ensure mod container directory exist
+    if (!(Test-Path -Path $modContainerPath)) {
+        New-Item -ItemType Directory -Path $modContainerPath | Out-Null
     }
 
-    # Process each dependency
+    # Clean up the game directory
+    Clear-GamePath -GamePath $gamePath -ModLoaderKey $modLoaderKey
+    Expand-Archive -Path $modpackZipPath -DestinationPath $gamePath -Force
+    Remove-Item -Force -Path $modpackZipPath
+    Write-Information "Installing mod loader: $modLoaderInfo."
+
+    # Download and install each mod
     foreach ($dependency in $dependencies) {
         $modFields = $dependency -split "-"
         $modAuthor, $modName, $modVersion = $modFields
         $modKey = "$modAuthor-$modName"
         $modInfo = "$modKey-$modVersion"
 
-        # Define the dependency extract directory
-        $dependencyExtractPath = "$dependencyPath\$modKey"
-        Write-Output "Installing mod: $modInfo."
+        # Define the mod path
+        $modPath = "$modContainerPath\$modKey"
+        Write-Information "Installing mod: $modInfo."
 
-        # Ensure the dependency extract directory exists
-        if (!(Test-Path -Path $dependencyExtractPath)) {
-            New-Item -ItemType Directory -Path $dependencyExtractPath | Out-Null
+        # Ensure mod path directory exist
+        if (!(Test-Path -Path $modPath)) {
+            New-Item -ItemType Directory -Path $modPath | Out-Null
         }
 
         # Download the mod
         $modUri = "https://thunderstore.io/package/download/$modAuthor/$modName/$modVersion/"
-        $dependencyZipPath = "$dependencyExtractPath.zip"
-        Invoke-WebRequest -Uri $modUri -OutFile $dependencyZipPath
+        $modZipPath = "$modPath.zip"
+        Invoke-WebRequest -Uri $modUri -OutFile $modZipPath
 
         # Extract the mod
-        Expand-Archive -Path $dependencyZipPath -DestinationPath $dependencyExtractPath -Force
-        Remove-Item -Force -Path $dependencyZipPath
+        Expand-Archive -Path $modZipPath -DestinationPath $modPath -Force
+        Remove-Item -Force -Path $modZipPath
 
-        # Check for "BepInExPack" directory
-        $bepInExPackPath = Join-Path -Path $dependencyExtractPath -ChildPath "BepInExPack"
-        if (Test-Path -Path $bepInExPackPath) {
-            Get-ChildItem -Path $bepInExPackPath -File -Depth 1 | Move-Item -Destination $gamePath -Force
-            Get-ChildItem -Path $bepInExPackPath -Recurse | Move-Item -Destination $dependencyExtractPath -Force
-            Remove-Item -Recurse -Force -Path $bepInExPackPath
-        }
-
-        # Check for "BepInEx" directory
-        $bepInExPath = Join-Path -Path $dependencyExtractPath -ChildPath "BepInEx"
-        if (Test-Path -Path $bepInExPath) {
-            Get-ChildItem -Path $bepInExPath -Recurse | Move-Item -Destination $dependencyExtractPath -Force
-            Remove-Item -Recurse -Force -Path $bepInExPath
-        }
-
-        # Check for other directories and move their contents
-        Get-ChildItem -Path $dependencyExtractPath -Directory | ForEach-Object {
-            $bepInExDirectory = $_.Name
-            $bepInExPath = $_.FullName
-
-            # Skip directories named the same as the mod
-            if ($bepInExDirectory -eq $modName) {
-                return
-            }
-
-            # Define the list of special directories
-            $specialDirectories = @("patchers", "plugins")
-            $isSpecialDirectory = $specialDirectories -contains $bepInExDirectory
-
-            # Define the mod directory
-            $modPath = "$modLoaderPath\$bepInExDirectory"
-            if ($isSpecialDirectory) {
-                $modPath = "$modPath\$modKey"
-            }
-
-            Write-Output "Configuring mod: $modInfo."
-
-            # Ensure the mod directory exists
-            if (!(Test-Path -Path $modPath)) {
-                New-Item -ItemType Directory -Path $modPath | Out-Null
-            }
-
-            Get-ChildItem -Path $bepInExPath -Depth 1 | ForEach-Object {
-                $isContainer = $_.PSIsContainer
-                $item = $_.Name
-                $itemPath = $_.FullName
-
-                try {
-                    if ($isSpecialDirectory) {
-                        Copy-Item -Path $itemPath -Destination $modPath -Recurse -Force
-                        Remove-Item -Recurse -Force -Path $itemPath
-                    }
-                    elseif ($isContainer) {
-                        Move-Item -Path $itemPath -Destination $modPath -Force
-                    }
-                    else {
-                        Move-Item -Path $itemPath -Destination $modPath
-                    }
-                }
-                catch [System.IO.IOException] {
-                    Write-Output "Unable to move $item to $modPath."
-                }
-                catch {
-                    Write-Output "An error occurred that could not be resolved."
-                    Write-Output $_
-                }
-            }
-
-            Remove-Item -Recurse -Force -Path $bepInExPath
-        }
-
-        # Cleanup the install directories
-        $dependencyItemsCount = Get-ChildItem -Path $dependencyExtractPath -Recurse | Measure-Object -Property Length -Sum
-        if ($modLoaderInfo -eq $modInfo -or $dependencyItemsCount -eq 0) {
-            Remove-Item -Recurse -Force -Path $dependencyExtractPath
+        # Initialize the mod or mod loader as needed
+        switch ($modLoaderType) {
+            1 {
+                Initialize-BepInExPackModLoader -ModPath $modPath -GamePath $gamePath -ModLoaderKey $modLoaderKey
+                Initialize-BepInExPackMod -ModPath $modPath -ModLoaderPath $modLoaderPath -ModLoaderKey $modLoaderKey
+            }  
         }
     }
 
-    Write-Output "$modpackInfo has been successfully installed to $gamePath."   
+    Write-Information "$modpackInfo has been successfully installed to $gamePath."   
+}
+
+function Clear-GamePath {
+    param (
+        [string]$GamePath,
+        [string]$ModLoaderKey = "Base-Spark"
+    )
+
+    $modLoaders = @{
+        "Base-Spark" = @("Spark", "Spark\mods")
+        "BepInEx-BepInExPack" = @("BepInEx", "doorstop_config.ini", "winhttp.dll")
+        "LavaGang-MelonLoader" = @("_state", "MelonLoader", "Mods", "Plugins", "UserData", "UserLibs", "version.dll")
+    }
+
+    $gameInternalRelativePaths = $modLoaders[$ModLoaderKey] + @("CHANGELOG.md", "icon.png", "manifest.json", "README.md")
+    Write-Information "Removing mod loader: $ModLoaderKey."
+
+    foreach ($gameInternalRelativePath in $gameInternalRelativePaths) {
+        $gameInternalPath = Join-Path -Path $GamePath -ChildPath $gameInternalRelativePath
+
+        try {
+            Remove-Item -Recurse -Force -Path $gameInternalPath -ErrorAction SilentlyContinue
+        } catch [System.IO.IOException] {
+            Write-Information "Unable to remove $gameInternalPath."
+        } catch {
+            Write-Information "An error occurred that could not be resolved."
+            Write-Information $_
+        }
+    }
 }
 
 function Confirm-GamePath {
@@ -260,9 +222,7 @@ function Get-GamePath {
                 $gamePath = $selectedPath
             }
 
-            if (Test-Path -Path $gamePath) {
-                break
-            }
+            if (Test-Path -Path $gamePath) { break }
         }
     }
 
@@ -276,25 +236,144 @@ function Find-ModLoader {
         [string[]]$Dependencies
     )
 
+    $defaultModLoaderKey = "Base-Spark"
     $modLoaders = @{
-        "Base-Spark" = @(0, "$GamePath\Spark", "$GamePath\Spark\mods", "0.0.0")
+        $defaultModLoaderKey = @(0, "$GamePath\Spark", "$GamePath\Spark\mods", "Pixelomega-Spark-0.0.0")
         "BepInEx-BepInExPack" = @(1, "$GamePath\BepInEx", "$GamePath\BepInEx\plugins")
         "LavaGang-MelonLoader" = @(2, "$GamePath\MelonLoader", "$GamePath\Mods")
     }
 
-    foreach ($dependency in $dependencies) {
+    foreach ($dependency in $Dependencies) {
         $modLoaderAuthor, $modLoaderName, $modLoaderVersion = $dependency -split "-"
         $modLoaderKey = "$modLoaderAuthor-$modLoaderName"
 
         if ($modLoaders.ContainsKey($modLoaderKey)) {
-            $modLoaderInfo = "$modLoaderKey-$modLoaderVersion"
             $modLoader = $modLoaders[$modLoaderKey]
-            $modLoader += $modLoaderInfo
+            $modLoader += @($modLoaderKey, $modLoaderVersion)
+
+            Write-Information "Mod loader found. Using: $modLoaderKey."
             return $modLoader
         }
     }
 
-    return $modLoaders["Base-Spark"]
+    Write-Information "Mod loader not found. Using: $defaultModLoaderKey."
+    return $modLoaders[$defaultModLoaderKey]
+}
+
+function Move-ModLoaderItem {
+    param (
+        [string]$FromPath,
+        [string]$ToPath
+    )
+
+    try {
+        $parsedFromPath = Get-Item -Path $FromPath
+        if ($parsedFromPath.PSIsContainer -and !(Test-Path -Path $toPath)) {
+            New-Item -ItemType Directory -Path $toPath | Out-Null
+        }
+
+        if (!$parsedFromPath.PSIsContainer) {
+            Move-Item -Path $parsedFromPath -Destination $ToPath
+        }
+    }
+    catch [System.IO.IOException] {
+        Write-Information "Unable to move $FromPath to $ToPath."
+    }
+    catch {
+        Write-Information "An error occurred that could not be resolved."
+        Write-Information $_
+    }
+}
+
+function Initialize-BepInExPackMod {
+    param (
+        [string]$ModPath,
+        [string]$ModLoaderPath,
+        [string]$ModLoaderKey = "BepInEx-BepInExPack"
+    )
+
+    $modKey = Split-Path -Path $ModPath -Leaf
+    if ($modKey -eq $ModLoaderKey) { return }
+
+    $modLoaderDirectory = Split-Path -Path $ModLoaderPath -Leaf
+    $modSpecialRelativePaths = @($modLoaderDirectory)
+    Write-Information "Configuring mod: $ModPath."
+
+    foreach ($modSpecialRelativePath in $modSpecialRelativePaths) {
+        $modInternalPath = Join-Path -Path $ModPath -ChildPath $modSpecialRelativePath
+        if (!(Test-Path -Path $modInternalPath)) { continue }
+
+        Get-ChildItem -Path $modInternalPath -Recurse | ForEach-Object {
+            $fromPath = $_.FullName
+            $relativeFromPath = $fromPath -replace "^$([regex]::Escape($modInternalPath))"
+            $toPath = Join-Path -Path $ModPath -ChildPath $relativeFromPath
+            Move-ModLoaderItem -FromPath $fromPath -ToPath $toPath
+        }
+
+        Remove-Item -Recurse -Force -Path $modInternalPath
+    }
+
+    $modLoaderReferencePaths = @(
+        @("cache", "cache"),
+        @("config", "config"),
+        @("core", "core"),
+        @("patchers", "patchers/$modKey"),
+        @("plugins", "plugins/$modKey")
+    )
+
+    foreach ($modLoaderReferencePath in $modLoaderReferencePaths) {
+        $modInternalPath = Join-Path -Path $ModPath -ChildPath $modLoaderReferencePath[0]
+        $modLoaderInternalPath = Join-Path -Path $ModLoaderPath -ChildPath $modLoaderReferencePath[1]
+        if (!(Test-Path -Path $modInternalPath)) { continue }
+
+        Get-ChildItem -Path $modInternalPath -Recurse | ForEach-Object {
+            $fromPath = $_.FullName
+            $relativeFromPath = $fromPath -replace "^$([regex]::Escape($modInternalPath))"
+            $toPath = Join-Path -Path $modLoaderInternalPath -ChildPath $relativeFromPath
+            Move-ModLoaderItem -FromPath $fromPath -ToPath $toPath
+        }
+
+        Remove-Item -Recurse -Force -Path $modInternalPath
+    }
+}
+
+function Initialize-BepInExPackModLoader {
+    param (
+        [string]$ModPath,
+        [string]$GamePath,
+        [string]$ModLoaderKey = "BepInEx-BepInExPack"
+    )
+
+    $modKey = Split-Path -Path $ModPath -Leaf
+    if ($modKey -ne $ModLoaderKey) { return }
+
+    Write-Information "Configuring mod loader: $ModPath."
+    $modLoaderReferencePaths = @(
+        @("manifest.json", "manifest.json"),
+        @("BepInExPack/BepInEx", "BepInEx"),
+        @("BepInExPack/doorstop_config.ini", "doorstop_config.ini"),
+        @("BepInExPack/winhttp.dll", "winhttp.dll")
+    )
+
+    foreach ($modLoaderReferencePath in $modLoaderReferencePaths) {
+        $modInternalPath = Join-Path -Path $ModPath -ChildPath $modLoaderReferencePath[0]
+        $gameInternalPath = Join-Path -Path $GamePath -ChildPath $modLoaderReferencePath[1]
+        if (!(Test-Path -Path $modInternalPath)) { continue }
+
+        $parsedModInternalPath = Get-Item -Path $modInternalPath
+        if ($parsedModInternalPath.PSIsContainer) {
+            Get-ChildItem -Path $modInternalPath -Recurse | ForEach-Object {
+                $fromPath = $_.FullName
+                $relativeFromPath = $fromPath -replace "^$([regex]::Escape($modInternalPath))"
+                $toPath = Join-Path -Path $gameInternalPath -ChildPath $relativeFromPath
+                Move-ModLoaderItem -FromPath $fromPath -ToPath $toPath
+            }
+        } else {
+            Move-ModLoaderItem -FromPath $modInternalPath -ToPath $gameInternalPath
+        }
+    }
+
+    Remove-Item -Recurse -Force -Path $ModPath
 }
 
 Install-Base -GameDirectory $gameDirectory -ModpackAuthor $modpackAuthor -ModpackName $modpackName -ModpackVersion $modpackVersion
